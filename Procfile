@@ -1,1 +1,1 @@
-web: gunicorn precast_app.wsgi --log-file -
+web gunicorn precast_app.wsgi --log-file -
