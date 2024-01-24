@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -74,15 +76,20 @@ WSGI_APPLICATION = 'precast_app.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'precast_db',
-        'USER': 'precast_user',
-        'PASSWORD': 'precast_pw',
-        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
-        'PORT': '5432',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'precast_db',
+    #     'USER': 'precast_user',
+    #     'PASSWORD': 'precast_pw',
+    #     'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
+    #     'PORT': '5432',
+    # }
+        'default': dj_database_url.config(default='postgres://precast_user:precast_pw@localhost/precast_db', conn_max_age=600)
 }
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+if db_from_env:
+    DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
