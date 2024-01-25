@@ -39,7 +39,7 @@
     {% csrf_token %}
     <input type="file" id="csv_file" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
     <button type="button" onclick="document.getElementById('csv_file').click();">Upload CSV</button>
-</form> -->
+</form>
 <input type="file" id="csv_file" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
 
 {{ suppliers|json_script:"suppliers" }}
