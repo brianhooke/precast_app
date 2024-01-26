@@ -11,7 +11,7 @@ function showMaterials(materials, suppliers) {
                 <div class="modal-body" style="overflow-x: auto;">
                     <table>
                         <tr>
-                            <th>Material</th>
+                            <th>Materials</th>
                             <th>Supplier</th>
                             <th>Units</th>
                             <th>$/Unit</th>

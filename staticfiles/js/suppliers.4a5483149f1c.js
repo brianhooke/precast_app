@@ -20,15 +20,11 @@ function showSuppliers(suppliers) {
     for (let supplier of suppliers) {
         modalHtml += `
                     <tr>
-                        <td data-supplier-id="${supplier.supplier_id}">${supplier.name}</td>                        
-                        <td>${supplier.contact}</td>
+                        <td data-supplier-id="${supplier.supplier_id}">${supplier.name}</td>                        <td>${supplier.contact}</td>
                         <td>${supplier.phone}</td>
                         <td>${supplier.email}</td>
-                        <td>${supplier.webpage}</td>
-                        <td class="deleteButton" data-supplier-id="${supplier.supplier_id}" style="cursor: pointer; padding: 5px; text-align: center;">x</td>                  
-                        </tr>
-                    <!-- New rows will be added here -->
-                    `;
+                        <td>${supplier.webpage}</td>                  
+                    </tr>`;
     }
     modalHtml += `
                     </table>
@@ -65,6 +61,7 @@ document.querySelector('#addRowButton').addEventListener('click', function(event
         var newCell = newRow.insertCell(i);
         var input = document.createElement('input');
         input.style.width = '100%'; // Adjust this value as needed
+        input.id = 'input' + (table.rows.length - 1) + i; // This will give each input a unique id
         newCell.appendChild(input);
     }
 });
@@ -81,60 +78,7 @@ document.querySelector('#addRowButton').addEventListener('click', function(event
 
     // Add event listener for 'Save' button
     document.querySelector('#saveButton').addEventListener('click', postNewSuppliers);
-
-    // Add event listener for "Update" button
-document.querySelector('#updateSuppliers').addEventListener('click', function(event) {
-    var table = document.querySelector('#suppliersModal table');
-    var cells = table.querySelectorAll('td');
-    cells.forEach(function(cell) {
-        if (!cell.hasAttribute('data-supplier-id')) { // Skip cells with 'data-supplier-id' attribute
-            var input = document.createElement('input');
-            input.value = cell.textContent;
-            cell.textContent = '';
-            cell.appendChild(input);
-        }
-    });
-});
-
-
-// Add event listener for 'x' buttons
-document.querySelector('#suppliersModal').addEventListener('click', function(event) {
-    if (event.target.classList.contains('deleteButton')) {
-        var supplierId = event.target.getAttribute('data-supplier-id');
-        // Send the supplierId to the server to be deleted
-        fetch('/delete_supplier/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({supplier_id: supplierId}),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            if (response.headers.get('Content-Type').includes('application/json')) {
-                return response.json();
-            } else {
-                throw new Error('Server response was not JSON');
-            }
-        })
-        .then(data => {
-            if (data.status === 'success') {
-                // Remove the row from the table
-                event.target.parentNode.remove();
-            } else {
-                console.error('Server error:', data);
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
-});
-
 }
-
 
 
 function postNewSuppliers() {
@@ -144,50 +88,32 @@ function postNewSuppliers() {
         var row = table.rows[i];
         var rowData = {};
         var cells = row.querySelectorAll('td');
-        var isFixedRow = cells[0].hasAttribute('data-supplier-id');
-        var name = isFixedRow ? cells[0].textContent : cells[0].querySelector('input').value;
-        if (!name) {
-            alert('New supplier must have a name');
-            return;
-        }
-        rowData['name'] = name;
-        for (var j = 1; j < cells.length; j++) {
-            var cell = cells[j];
-            var input = cell.querySelector('input');
-            var key = ['contact', 'phone', 'email', 'webpage'][j - 1];
-            rowData[key] = input ? input.value : cell.textContent;
-        }
-        rowData['supplier_id'] = isFixedRow ? cells[0].getAttribute('data-supplier-id') : '';
+        rowData['supplier_id'] = cells[0].dataset.supplierId || '';
+        rowData['name'] = cells[0].querySelector('input[type="text"]') ? cells[0].querySelector('input[type="text"]').value : cells[0].textContent;
+        rowData['contact'] = cells[1].querySelector('input[type="text"]') ? cells[1].querySelector('input[type="text"]').value : cells[1].textContent;
+        rowData['phone'] = cells[2].querySelector('input[type="text"]') ? cells[2].querySelector('input[type="text"]').value : cells[2].textContent;
+        rowData['email'] = cells[3].querySelector('input[type="text"]') ? cells[3].querySelector('input[type="text"]').value : cells[3].textContent;
+        rowData['webpage'] = cells[4].querySelector('input[type="text"]') ? cells[4].querySelector('input[type="text"]').value : cells[4].textContent;
         data.push(rowData);
     }
-    console.log("here comes the filtered data to be posted")
-    console.log(data);
     // Send the data to the server
-    fetch('/update_suppliers/', {
+    fetch('/homepage/update_suppliers/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        if (response.headers.get('Content-Type').includes('application/json')) {
-            return response.json();
-        } else {
-            throw new Error('Server response was not JSON');
-        }
-    })
+    .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
-        location.reload();
     })
     .catch((error) => {
         console.error('Error:', error);
     });
 }
+
+
 
 document.addEventListener('DOMContentLoaded', (event) => {
     console.log(suppliers);
