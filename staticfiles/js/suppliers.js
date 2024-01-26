@@ -24,7 +24,7 @@ function showSuppliers(suppliers) {
                         <td>${supplier.contact}</td>
                         <td>${supplier.phone}</td>
                         <td>${supplier.email}</td>
-                        <td>${supplier.webpage}</td>
+                        <td><a href="${supplier.webpage.startsWith('http://') || supplier.webpage.startsWith('https://') ? supplier.webpage : 'http://' + supplier.webpage}" target="_blank">${supplier.name}</a></td>
                         <td class="deleteButton" data-supplier-id="${supplier.supplier_id}" style="cursor: pointer; padding: 5px; text-align: center;">x</td>                  
                         </tr>
                     <!-- New rows will be added here -->
@@ -82,14 +82,18 @@ document.querySelector('#addRowButton').addEventListener('click', function(event
     // Add event listener for 'Save' button
     document.querySelector('#saveButton').addEventListener('click', postNewSuppliers);
 
-    // Add event listener for "Update" button
+// Add event listener for "Update" button
 document.querySelector('#updateSuppliers').addEventListener('click', function(event) {
     var table = document.querySelector('#suppliersModal table');
     var cells = table.querySelectorAll('td');
     cells.forEach(function(cell) {
         if (!cell.hasAttribute('data-supplier-id')) { // Skip cells with 'data-supplier-id' attribute
             var input = document.createElement('input');
-            input.value = cell.textContent;
+            if (cell.querySelector('a')) { // If the cell contains a link
+                input.value = cell.querySelector('a').href; // Set the input value to the href of the link
+            } else {
+                input.value = cell.textContent;
+            }
             cell.textContent = '';
             cell.appendChild(input);
         }

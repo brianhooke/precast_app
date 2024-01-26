@@ -1349,3 +1349,9 @@ Data: [{'name': 'PSA', 'contact': 'Mick', 'phone': '', 'email': 'mick@psa.com.au
 Watching for file changes with StatReloader
 Data: [{'name': 'PSA', 'contact': 'Mick', 'phone': '', 'email': 'mick@psa.com.auafd', 'webpage': 'www.psa.com.au', 'undefined': 'x', 'supplier_id': '1'}, {'name': 'Mr B', 'contact': '', 'phone': '', 'email': '', 'webpage': '', 'undefined': 'x', 'supplier_id': '12'}, {'name': 'afaaf', 'contact': 'sfdsfs', 'phone': '', 'email': '', 'webpage': '', 'undefined': 'x', 'supplier_id': '14'}, {'name': 'Sanga', 'contact': 'Jippy', 'phone': '', 'email': 'fwfw', 'webpage': '', 'undefined': 'x', 'supplier_id': '15'}, {'name': 'Trice', 'contact': '', 'phone': '', 'email': '', 'webpage': '', 'undefined': 'x', 'supplier_id': '16'}, {'name': 'Bansh', 'contact': 'eee', 'phone': 'great', 'email': 'man', 'webpage': 'ppl', 'supplier_id': ''}]
 Data: [{'name': 'PSA', 'contact': 'Mick', 'phone': '', 'email': 'mick@psa.com.auafd', 'webpage': 'www.psa.com.au', 'undefined': 'x', 'supplier_id': '1'}, {'name': 'afaaf', 'contact': 'sfdsfs', 'phone': '', 'email': '', 'webpage': '', 'undefined': 'x', 'supplier_id': '14'}, {'name': 'Trice', 'contact': '', 'phone': '', 'email': '', 'webpage': '', 'undefined': 'x', 'supplier_id': '16'}, {'name': 'Bansh', 'contact': 'eee', 'phone': 'great', 'email': 'man', 'webpage': 'ppl', 'undefined': 'x', 'supplier_id': '17'}]
+Watching for file changes with StatReloader
+Not Found: /www.psa.com.au
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Data: [{'name': 'PSA', 'contact': 'Mick', 'phone': '', 'email': 'mick@psa.com.auafd', 'webpage': 'PSA', 'undefined': 'x', 'supplier_id': '1'}, {'name': 'Holcim', 'contact': 'Con', 'phone': 'hh', 'email': 'hh', 'webpage': 'www.holcim.com.au', 'supplier_id': ''}]
