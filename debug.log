@@ -1355,3 +1355,5 @@ Not Found: /favicon.ico
 Watching for file changes with StatReloader
 Watching for file changes with StatReloader
 Data: [{'name': 'PSA', 'contact': 'Mick', 'phone': '', 'email': 'mick@psa.com.auafd', 'webpage': 'PSA', 'undefined': 'x', 'supplier_id': '1'}, {'name': 'Holcim', 'contact': 'Con', 'phone': 'hh', 'email': 'hh', 'webpage': 'www.holcim.com.au', 'supplier_id': ''}]
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
