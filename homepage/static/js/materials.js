@@ -15,6 +15,8 @@ function showMaterials(materials, suppliers) {
                             <th>Supplier</th>
                             <th>Units</th>
                             <th>$/Unit</th>
+                            <th>Wastage</th>
+                            <th>Pack Size</th>
                         </tr>`;
                     for (let material of materials) {
                         modalHtml += `
@@ -22,7 +24,9 @@ function showMaterials(materials, suppliers) {
                             <td>${material.material}</td>
                             <td>${material.supplier}</td>
                             <td>${material.units}</td>
-                            <td>${parseFloat(material.rate).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>                    
+                            <td>${parseFloat(material.rate).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td>${material.expected_wastage * 100}%</td>
+                            <td>${material.supplier_increments !== null && material.supplier_increments != 0.00000 ? parseFloat(material.supplier_increments).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0}) : ''}</td>
                         </tr>`;
                     }
     modalHtml += `

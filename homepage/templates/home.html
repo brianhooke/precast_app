@@ -13,7 +13,7 @@
     left: 10%;
     width: 90%;
     height: 100%;
-    background-image: url('{% static "images/shadow_6.png" %}');
+    background-image: url('{% static "images/shadow_2.png" %}');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -35,69 +35,89 @@
 <p style="text-align:center; color: white;" >5/43 Accolade Avenue</p>
 
 <!-- CSV Upload Form -->
+<!-- CSV Upload Form for Materials -->
 <form action="{% url 'materials_upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file" id="csv_file" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
-    <button type="button" onclick="document.getElementById('csv_file').click();">Upload CSV</button>
+    <input type="file" id="csv_file_materials" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
+    <button type="button" onclick="document.getElementById('csv_file_materials').click();">Upload CSV for Materials</button>
 </form>
-<input type="file" id="csv_file" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
+
+<!-- CSV Upload Form for Bom -->
+<form action="{% url 'bom_upload' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" id="csv_file_bom" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
+    <button type="button" onclick="document.getElementById('csv_file_bom').click();">Upload CSV for Bom</button>
+</form>
 
 {{ suppliers|json_script:"suppliers" }}
 {{ materials|json_script:"materials" }}
+{{ bom|json_script:"bom" }}
 
-<script> // CSV Upload Script
-    document.getElementById('csv_file').addEventListener('change', function(event) {
-        var file = event.target.files[0];
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            var csvData = event.target.result;
-            var lines = csvData.split('\n');
-            var result = [];
-            var headers = lines[0].split(',');
+<script> 
 
-            for (var i = 1; i < lines.length; i++) {
-                var obj = {};
-                var currentline = lines[i].split(',');
+// CSV Upload Script for Materials
+// document.getElementById('csv_file_materials').addEventListener('change', function(event) {
+//     uploadCSV(event, '{% url 'materials_upload' %}');
+// });
+// CSV Upload Script for Bom
+// document.getElementById('csv_file_bom').addEventListener('change', function(event) {
+//     uploadCSV(event, '{% url 'bom_upload' %}');
+// });
 
-                for (var j = 0; j < headers.length; j++) {
-                    obj[headers[j]] = currentline[j];
-                }
-
-                result.push(obj);
+function uploadCSV(event, url) {
+    var file = event.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        var csvData = event.target.result;
+        var lines = csvData.split('\n');
+        var result = [];
+        var headers = lines[0].split(',').map(header => header.trim());
+        for (var i = 1; i < lines.length; i++) {
+            var obj = {};
+            var currentline = lines[i].split(',').map(field => field.trim());
+            for (var j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j];
             }
-
-            fetch('{% url 'materials_upload' %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify(result)
-            }).then(function(response) {
-                if (response.ok) {
-                    console.log('CSV file uploaded and processed successfully.');
-                } else {
-                    console.error('Error:', response.statusText);
-                }
-            }).catch(function(error) {
-                console.error('Error:', error);
-            });
-        };
-
-        reader.readAsText(file);
-    });
+            result.push(obj);
+        }
+        // Display the CSV data in an alert popup
+        alert(JSON.stringify(result, null, 2));
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(result)
+        }).then(function(response) {
+            if (response.ok) {
+                console.log('CSV file uploaded and processed successfully.');
+            } else {
+                console.error('Error:', response.statusText);
+            }
+        }).catch(function(error) {
+            console.error('Error:', error);
+        });
+    };
+    reader.readAsText(file);
+}
 </script>
 
 <script>
     var suppliers = JSON.parse(document.getElementById('suppliers').textContent);
     suppliers.forEach(supplier => console.log(supplier));
-    var materials = JSON.parse(document.getElementById('materials').textContent);
-    materials.forEach(materials => console.log(materials));
+    // Parse the materials data and attach it to the window object
+    window.materials = JSON.parse(document.getElementById('materials').textContent);
+    // Now you can use the global materials variable
+    window.materials.forEach(material => console.log(material));
+    var bom = JSON.parse(document.getElementById('bom').textContent);
+    bom.forEach(bomItem => console.log(bomItem));
 </script>
 
 <script src="{% static 'js/suppliers.js' %}"></script>
 <script src="{% static 'js/materials.js' %}"></script>
-
+<script src="{% static 'js/bom.js' %}"></script>
+<script src="{% static 'js/stocktake.js' %}"></script>
 
 
 {% endblock %}

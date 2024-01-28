@@ -1,27 +1,44 @@
 from django.shortcuts import render
 from django.db import transaction
 from django.http import HttpResponse
-from .models import Suppliers, Materials
+from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F
 import json
 import csv
 import logging
+from logging.handlers import RotatingFileHandler
+import io
+import chardet
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = RotatingFileHandler('application.log', maxBytes=2000, backupCount=10)
+logger.addHandler(handler)
 
 # Create your views here.
 def home(request):
-    logger = logging.getLogger(__name__)
     suppliers = Suppliers.objects.all().values()
     materials = Materials.objects.all().annotate(supplier_name=F('supplier_id__name')).values()
+    bom = Bom.objects.all().values()
     # Convert suppliers to a dictionary for easy lookup
     suppliers_dict = {supplier['supplier_id']: supplier['name'] for supplier in suppliers}
+    # Convert materials to a dictionary for easy lookup
+    materials_dict = {material['material_id']: material for material in materials}
     # Add supplier name to each material
     for material in materials:
         material['supplier'] = suppliers_dict.get(material['supplier_id_id'])
+    # Add wastage_adjusted_quantity to each bom
+    for bom_item in bom:
+        material = materials_dict.get(bom_item['material_id_id'])
+        if material:
+            bom_item['wastage_adjusted_quantity'] = bom_item['quantity'] * (1+(material['expected_wastage']) or 0)
+            bom_item['material'] = material['material']
     # logger.info('Suppliers: %s', list(suppliers))
     # logger.info('Materials: %s', list(materials))
-    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials)})
+    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom)})
 
 @csrf_exempt
 def update_suppliers(request):
@@ -52,24 +69,39 @@ def update_suppliers(request):
     else:
         return JsonResponse({'status': 'bad request'}, status=400)
     
+@csrf_exempt
 def materials_upload(request):
+    logger.info('about to start materials_upload5')
     if request.method == 'POST':
         if 'csv_file' not in request.FILES:
             return HttpResponse("No CSV file uploaded.", status=400)
         csv_file = request.FILES['csv_file']
-        decoded_file = csv_file.read().decode('utf-8').splitlines()
+        rawdata = csv_file.read()
+        result = chardet.detect(rawdata)
+        charenc = result['encoding']
+        decoded_file = rawdata.decode(charenc).splitlines()
         reader = csv.DictReader(decoded_file)
         with transaction.atomic():
             # Delete all existing data from the Materials table
             Materials.objects.all().delete()
             for row in reader:
+                # Log the row data
+                logger.info(f'Processing row: {row}')
+                # Strip BOM from keys
+                row = {k.lstrip('\ufeff'): v for k, v in row.items()}
+                material = row['material']
                 rate = row['rate'].replace(',', '')
-                supplier = Suppliers.objects.get(supplier_id=row['supplier_id'])
+                supplier_id = Suppliers.objects.get(supplier_id=row['supplier_id'])
+                units = row['units']
+                expected_wastage = row['expected_wastage'] if row['expected_wastage'] else None
+                supplier_increments = row['supplier_increments'] if row['supplier_increments'] else None
                 material_data = {
-                    'material': row['material'],
-                    'units': row['units'],
+                    'material': material,
+                    'units': units,
                     'rate': rate,
                     'supplier_id': supplier_id,
+                    'expected_wastage': expected_wastage,
+                    'supplier_increments': supplier_increments,
                 }
                 material = Materials(**material_data)
                 material.save()
@@ -95,3 +127,48 @@ def delete_supplier(request):
             return JsonResponse({'status': 'Invalid request'}, status=400)
     else:
         return JsonResponse({'status': 'Invalid method'}, status=405)
+
+@csrf_exempt
+def bom_upload(request):
+    logger.info('about to start bom_upload')
+    if request.method == 'POST':
+        if 'csv_file' not in request.FILES:
+            return HttpResponse("No CSV file uploaded.", status=400)
+        csv_file = request.FILES['csv_file']
+        rawdata = csv_file.read()
+        result = chardet.detect(rawdata)
+        charenc = result['encoding']
+        decoded_file = rawdata.decode(charenc).splitlines()
+        reader = csv.DictReader(decoded_file)
+        with transaction.atomic():
+            for row in reader:
+                # Log the row data
+                logger.info(f'Processing row: {row}')
+                # Strip BOM from keys
+                row = {k.lstrip('\ufeff'): v for k, v in row.items()}
+                material_id = Materials.objects.get(material_id=row['material_id'])
+                quantity = row['quantity']
+                bom_data = {
+                    'material_id': material_id,
+                    'quantity': quantity,
+                }
+                bom, created = Bom.objects.update_or_create(**bom_data)
+        return HttpResponse("CSV file uploaded and processed successfully.")
+    else:
+        # Handle the case for non-POST requests
+        pass
+
+@csrf_exempt
+def upload_stocktake(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        stocktake = Stocktake(datestamp=data['date'])
+        stocktake.save()
+        for item in data['data']:
+            material = Materials.objects.get(material_id=item['material_id'])
+            amount = item['amount'] if item['amount'] is not None else '0'
+            stocktake_data = Stocktake_data(stocktake_id=stocktake, material_id=material, amount=amount)
+            stocktake_data.save()
+        return JsonResponse({'stocktake_id': stocktake.stocktake_id})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)

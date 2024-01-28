@@ -50,10 +50,8 @@ function showSuppliers(suppliers) {
     var modalElement = document.createElement('div');
     // Set its HTML to the modal HTML
     modalElement.innerHTML = modalHtml;
-
     // Append the new element to the body
     document.body.appendChild(modalElement);
-
     // Show the modal
     $('#suppliersModal').modal('show');
 
@@ -100,7 +98,6 @@ document.querySelector('#updateSuppliers').addEventListener('click', function(ev
     });
 });
 
-
 // Add event listener for 'x' buttons
 document.querySelector('#suppliersModal').addEventListener('click', function(event) {
     if (event.target.classList.contains('deleteButton')) {
@@ -136,9 +133,7 @@ document.querySelector('#suppliersModal').addEventListener('click', function(eve
         });
     }
 });
-
 }
-
 
 
 function postNewSuppliers() {
@@ -195,11 +190,9 @@ function postNewSuppliers() {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     console.log(suppliers);
-
     // Event listener for the Suppliers link
 document.querySelector('#suppliersLink').addEventListener('click', function(event) {
     event.preventDefault();
-
     // Call the showSuppliers function with the suppliers data
     showSuppliers(suppliers);
     });
