@@ -36,18 +36,18 @@
 
 <!-- CSV Upload Form -->
 <!-- CSV Upload Form for Materials -->
-<form action="{% url 'materials_upload' %}" method="post" enctype="multipart/form-data">
+<!-- <form action="{% url 'materials_upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" id="csv_file_materials" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
     <button type="button" onclick="document.getElementById('csv_file_materials').click();">Upload CSV for Materials</button>
-</form>
+</form> -->
 
 <!-- CSV Upload Form for Bom -->
-<form action="{% url 'bom_upload' %}" method="post" enctype="multipart/form-data">
+<!-- <form action="{% url 'bom_upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" id="csv_file_bom" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
     <button type="button" onclick="document.getElementById('csv_file_bom').click();">Upload CSV for Bom</button>
-</form>
+</form> -->
 
 {{ suppliers|json_script:"suppliers" }}
 {{ materials|json_script:"materials" }}
