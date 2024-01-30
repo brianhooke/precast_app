@@ -51,3 +51,9 @@ class Stocktake_data(models.Model):
     class Meta:
         verbose_name_plural = "Stocktake Data"
     
+class Drawings(models.Model):
+    pdf_file = models.FileField(upload_to='drawings/')
+    def __str__(self):
+        return self.pdf_file.name  # Return the name of the uploaded file
+    class Meta:
+        verbose_name_plural = "Drawings"

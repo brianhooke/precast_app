@@ -13,7 +13,7 @@
     left: 10%;
     width: 90%;
     height: 100%;
-    background-image: url('{% static "images/shadow_5.png" %}');
+    background-image: url('{% static "images/shadow_2.png" %}');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -49,12 +49,19 @@
     <button type="button" onclick="document.getElementById('csv_file_bom').click();">Upload CSV for Bom</button>
 </form> -->
 
+<!-- Drawing Upload Form -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" id="pdfUpload" multiple name="{{ form.pdf_file.name }}" accept=".pdf" style="display: none;" />
+    <button id="uploadButton" type="button">Upload Drawings</button>
+</form>
+
 {{ suppliers|json_script:"suppliers" }}
 {{ materials|json_script:"materials" }}
 {{ bom|json_script:"bom" }}
+{{ drawings|json_script:"drawings" }}
 
 <script> 
-
 // CSV Upload Script for Materials
 // document.getElementById('csv_file_materials').addEventListener('change', function(event) {
 //     uploadCSV(event, '{% url 'materials_upload' %}');
@@ -112,12 +119,15 @@ function uploadCSV(event, url) {
     window.materials.forEach(material => console.log(material));
     var bom = JSON.parse(document.getElementById('bom').textContent);
     bom.forEach(bomItem => console.log(bomItem));
+    var drawings = JSON.parse(document.getElementById('drawings').textContent);
 </script>
 
 <script src="{% static 'js/suppliers.js' %}"></script>
 <script src="{% static 'js/materials.js' %}"></script>
 <script src="{% static 'js/bom.js' %}"></script>
 <script src="{% static 'js/stocktake.js' %}"></script>
+<script src="{% static 'js/drawings.js' %}"></script>
+
 
 
 {% endblock %}

@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'homepage.middleware.XFrameOptionsMiddleware',  # Add this line
 ]
 
 ROOT_URLCONF = 'precast_app.urls'
@@ -71,6 +71,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'precast_app.wsgi.application'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -155,3 +157,5 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'

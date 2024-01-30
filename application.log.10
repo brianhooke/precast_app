@@ -1,19 +1,19 @@
-Processing row: {'material': 'N16 V bars', 'units': 'm', 'rate': '3.68', 'supplier_id': '1'}
-Processing row: {'material': 'N16 processed perimeter bar', 'units': 'm', 'rate': '3.68', 'supplier_id': '18'}
-Processing row: {'material': 'Tie Wire - normal', 'units': 'qty', 'rate': '12', 'supplier_id': '18'}
-Processing row: {'material': 'Steel Delivery', 'units': 'qty', 'rate': '200', 'supplier_id': '18'}
-Processing row: {'material': 'Lifting anchor 10t', 'units': 'qty', 'rate': '9.45', 'supplier_id': '18'}
-Processing row: {'material': 'Ferrule 20mm x 96mm zinc', 'units': 'qty', 'rate': '2.6', 'supplier_id': '18'}
-Processing row: {'material': 'Ferrule 20mm antennae', 'units': 'qty', 'rate': '0.16', 'supplier_id': '18'}
-Processing row: {'material': 'Ferrule 20mm locating stickies', 'units': 'qty', 'rate': '0.23', 'supplier_id': '18'}
-Processing row: {'material': 'Ferrule chairs', 'units': 'qty', 'rate': '1.31', 'supplier_id': '18'}
-Processing row: {'material': 'Ferrule 20mm x 140mm double ended', 'units': 'qty', 'rate': '3.75', 'supplier_id': '18'}
-Processing row: {'material': 'Grout tubes', 'units': 'qty', 'rate': '2.65', 'supplier_id': '18'}
-Processing row: {'material': 'Grout tube sticky cap ', 'units': 'qty', 'rate': '0.79', 'supplier_id': '18'}
-Processing row: {'material': 'Grout tube antennae cap', 'units': 'qty', 'rate': '0.36', 'supplier_id': '18'}
-Processing row: {'material': 'Grout tube chairs', 'units': 'qty', 'rate': '0.39', 'supplier_id': '18'}
-Processing row: {'material': 'Silicone', 'units': 'qty', 'rate': '5.8', 'supplier_id': '18'}
-Processing row: {'material': 'ID plate', 'units': 'qty', 'rate': '0.69', 'supplier_id': '18'}
-Processing row: {'material': 'Dummy Joints', 'units': 'm', 'rate': '3.1975', 'supplier_id': '18'}
-Processing row: {'material': 'Chairs 65/75', 'units': 'qty', 'rate': '0.18', 'supplier_id': '18'}
-Processing row: {'material': 'Chairs 30/40', 'units': 'qty', 'rate': '0.17', 'supplier_id': '18'}
+Processing row: {'material': 'Lifting Products Delivery', 'units': 'qty', 'rate': '1500', 'supplier_id': '18'}
+Processing row: {'material': 'Griding discs', 'units': 'qty', 'rate': '2.02', 'supplier_id': '18'}
+Processing row: {'material': 'Bed sanding machine hire and pads', 'units': 'fixed', 'rate': '400', 'supplier_id': '18'}
+Processing row: {'material': 'Bed cleaning - turps and rags', 'units': 'fixed', 'rate': '200', 'supplier_id': '18'}
+Processing row: {'material': 'coloured sharpies, esp black', 'units': 'qty', 'rate': '1', 'supplier_id': '18'}
+Processing row: {'material': 'caulking gun', 'units': 'qty', 'rate': '31.51', 'supplier_id': '18'}
+Processing row: {'material': 'concrete waste disposal', 'units': 'month', 'rate': '272.73', 'supplier_id': '18'}
+Processing row: {'material': 'Cloth Tape (25m rolls)', 'units': 'qty', 'rate': '2.52', 'supplier_id': '18'}
+Processing row: {'material': 'Painters Sheet Plastic (25m rolls)', 'units': 'qty', 'rate': '1.21', 'supplier_id': '18'}
+Processing row: {'material': 'Chalk (blue)', 'units': 'kg', 'rate': '6.36', 'supplier_id': '18'}
+Processing row: {'material': 'Floor polishing pads', 'units': 'qty', 'rate': '15', 'supplier_id': '18'}
+Processing row: {'material': 'Tie Wire - Makita', 'units': 'qty', 'rate': '1.55', 'supplier_id': '18'}
+Processing row: {'material': 'Safety glasses', 'units': 'qty', 'rate': '1.25', 'supplier_id': '18'}
+Processing row: {'material': 'Gloves', 'units': 'qty', 'rate': '7.9', 'supplier_id': '18'}
+Processing row: {'material': 'Petrol', 'units': 'litres', 'rate': '2', 'supplier_id': '19'}
+Processing row: {'material': 'Sanding block', 'units': 'qty', 'rate': '45.52', 'supplier_id': '1'}
+Processing row: {'material': 'Lanotec 20L', 'units': 'qty', 'rate': '427', 'supplier_id': '1'}
+Processing row: {'material': 'Transport - trucks', 'units': 'hours', 'rate': '140', 'supplier_id': '18'}
+Processing row: {'material': 'Transport - crane unload ', 'units': 'days', 'rate': '5000', 'supplier_id': '18'}

@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db import transaction
 from django.http import HttpResponse
-from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data
+from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F
@@ -11,7 +11,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import io
 import chardet
-
+from .forms import DrawingUploadForm
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -36,9 +36,10 @@ def home(request):
         if material:
             bom_item['wastage_adjusted_quantity'] = bom_item['quantity'] * (1+(material['expected_wastage']) or 0)
             bom_item['material'] = material['material']
-    # logger.info('Suppliers: %s', list(suppliers))
+    drawings = Drawings.objects.all().order_by('id')  # Fetch all drawings ordered by id
+    drawings_data = [{'id': drawing.id, 'pdf_file': drawing.pdf_file.url} for drawing in drawings]    # logger.info('Suppliers: %s', list(suppliers))
     # logger.info('Materials: %s', list(materials))
-    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom)})
+    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data})
 
 @csrf_exempt
 def update_suppliers(request):
@@ -172,3 +173,20 @@ def upload_stocktake(request):
         return JsonResponse({'stocktake_id': stocktake.stocktake_id})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def upload_drawing(request):
+    if request.method == 'POST':
+        files = request.FILES.getlist('pdf_file')
+        logger.info('Received %d files', len(files))  # Log the number of files received
+        for file in files:
+            form = DrawingUploadForm(request.POST, {'pdf_file': file})
+            if form.is_valid():
+                form.save()
+            else:
+                logger.error('Form is not valid: %s', form.errors)  # Log form errors
+                return JsonResponse({'error': form.errors}, status=400)
+        return redirect('home')
+    else:
+        form = DrawingUploadForm()
+    return render(request, 'home.html', {'form': form})
