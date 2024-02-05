@@ -36,40 +36,43 @@
 
 <!-- CSV Upload Form -->
 <!-- CSV Upload Form for Materials -->
-<!-- <form action="{% url 'materials_upload' %}" method="post" enctype="multipart/form-data">
+<form action="{% url 'materials_upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" id="csv_file_materials" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
     <button type="button" onclick="document.getElementById('csv_file_materials').click();">Upload CSV for Materials</button>
-</form> -->
+</form>
 
 <!-- CSV Upload Form for Bom -->
-<!-- <form action="{% url 'bom_upload' %}" method="post" enctype="multipart/form-data">
+<form action="{% url 'bom_upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" id="csv_file_bom" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
     <button type="button" onclick="document.getElementById('csv_file_bom').click();">Upload CSV for Bom</button>
-</form> -->
+</form>
 
 <!-- Drawing Upload Form -->
-<form method="post" enctype="multipart/form-data">
+<!-- <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" id="pdfUpload" multiple name="{{ form.pdf_file.name }}" accept=".pdf" style="display: none;" />
     <button id="uploadButton" type="button">Upload Drawings</button>
-</form>
+</form> -->
 
 {{ suppliers|json_script:"suppliers" }}
 {{ materials|json_script:"materials" }}
 {{ bom|json_script:"bom" }}
 {{ drawings|json_script:"drawings" }}
+{{ stocktake|json_script:"stocktake" }}
+{{ stocktake_data|json_script:"stocktake_data" }}
+
 
 <script> 
 // CSV Upload Script for Materials
-// document.getElementById('csv_file_materials').addEventListener('change', function(event) {
-//     uploadCSV(event, '{% url 'materials_upload' %}');
-// });
+document.getElementById('csv_file_materials').addEventListener('change', function(event) {
+    uploadCSV(event, '{% url 'materials_upload' %}');
+});
 // CSV Upload Script for Bom
-// document.getElementById('csv_file_bom').addEventListener('change', function(event) {
-//     uploadCSV(event, '{% url 'bom_upload' %}');
-// });
+document.getElementById('csv_file_bom').addEventListener('change', function(event) {
+    uploadCSV(event, '{% url 'bom_upload' %}');
+});
 
 function uploadCSV(event, url) {
     var file = event.target.files[0];
@@ -113,13 +116,16 @@ function uploadCSV(event, url) {
 <script>
     var suppliers = JSON.parse(document.getElementById('suppliers').textContent);
     suppliers.forEach(supplier => console.log(supplier));
-    // Parse the materials data and attach it to the window object
-    window.materials = JSON.parse(document.getElementById('materials').textContent);
+    // Parse the materials data and attach it to the global variable
+    var materials = JSON.parse(document.getElementById('materials').textContent);
     // Now you can use the global materials variable
-    window.materials.forEach(material => console.log(material));
+    materials.forEach(material => console.log(material));
     var bom = JSON.parse(document.getElementById('bom').textContent);
     bom.forEach(bomItem => console.log(bomItem));
     var drawings = JSON.parse(document.getElementById('drawings').textContent);
+    var stocktake = JSON.parse(document.getElementById('stocktake').textContent);
+    var stocktake_data = JSON.parse(document.getElementById('stocktake_data').textContent);
+    console.log('stocktake_data:', stocktake_data);
 </script>
 
 <script src="{% static 'js/suppliers.js' %}"></script>

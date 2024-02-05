@@ -5,8 +5,10 @@ from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawin
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F
+from django.core.serializers import serialize
 import json
 import csv
+import datetime
 import logging
 from logging.handlers import RotatingFileHandler
 import io
@@ -15,8 +17,8 @@ from .forms import DrawingUploadForm
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-handler = RotatingFileHandler('application.log', maxBytes=2000, backupCount=10)
-logger.addHandler(handler)
+# handler = RotatingFileHandler('application.log', maxBytes=2000, backupCount=10)
+# logger.addHandler(handler)
 
 # Create your views here.
 def home(request):
@@ -30,6 +32,20 @@ def home(request):
     # Add supplier name to each material
     for material in materials:
         material['supplier'] = suppliers_dict.get(material['supplier_id_id'])
+    stocktake = [{field.name: getattr(obj, field.name).strftime('%Y-%m-%d') if isinstance(getattr(obj, field.name), datetime.date) else getattr(obj, field.name) for field in Stocktake._meta.fields} for obj in Stocktake.objects.all()]    
+    stocktake_data = list(Stocktake_data.objects.all().values())
+    # Rename keys
+    stocktake_data = [
+        {
+            'id': item['id'],
+            'stocktake_id': item['stocktake_id_id'],
+            'material_id': item['material_id_id'],
+            'amount': item['amount']
+        }
+        for item in stocktake_data
+    ]
+    logger.info('Materials data here it comes:')
+    logger.info(materials)
     # Add wastage_adjusted_quantity to each bom
     for bom_item in bom:
         material = materials_dict.get(bom_item['material_id_id'])
@@ -39,7 +55,7 @@ def home(request):
     drawings = Drawings.objects.all().order_by('id')  # Fetch all drawings ordered by id
     drawings_data = [{'id': drawing.id, 'pdf_file': drawing.pdf_file.url} for drawing in drawings]    # logger.info('Suppliers: %s', list(suppliers))
     # logger.info('Materials: %s', list(materials))
-    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data})
+    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data, 'stocktake': stocktake, 'stocktake_data': stocktake_data})
 
 @csrf_exempt
 def update_suppliers(request):
