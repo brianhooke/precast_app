@@ -108,7 +108,7 @@ def materials_upload(request):
                 row = {k.lstrip('\ufeff'): v for k, v in row.items()}
                 material = row['material']
                 rate = row['rate'].replace(',', '')
-                supplier_id = Suppliers.objects.get(supplier_id=row['supplier_id'])
+                supplier_id = Suppliers.objects.get(supplier_id=row['supplier_id']) if row['supplier_id'] else None                
                 units = row['units']
                 expected_wastage = row['expected_wastage'] if row['expected_wastage'] else None
                 supplier_increments = row['supplier_increments'] if row['supplier_increments'] else None

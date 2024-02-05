@@ -16,7 +16,7 @@ class Suppliers(models.Model):
 class Materials(models.Model):
     material_id = models.AutoField(primary_key=True)
     material = models.CharField(max_length=100)
-    supplier_id = models.ForeignKey('Suppliers', on_delete=models.CASCADE)
+    supplier_id = models.ForeignKey('Suppliers', on_delete=models.CASCADE, null=True, blank=True)
     units = models.CharField(max_length=100)
     rate = models.DecimalField(max_digits=12, decimal_places=5, default=Decimal('0.00000'))
     expected_wastage = models.DecimalField(max_digits=5, decimal_places=2, null=True)
