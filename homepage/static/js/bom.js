@@ -49,8 +49,6 @@ function showBom(bom) {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    console.log(suppliers);
-    // Event listener for the Suppliers link
 document.querySelector('#bomLink').addEventListener('click', function(event) {
     event.preventDefault();
     // Call the showSuppliers function with the suppliers data

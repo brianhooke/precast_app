@@ -55,8 +55,6 @@ function showMaterials(materials, suppliers) {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    console.log(materials);
-    // Event listener for the Materials link
 document.querySelector('#materialsLink').addEventListener('click', function(event) {
     event.preventDefault();
     // Call the showSuppliers function with the suppliers data

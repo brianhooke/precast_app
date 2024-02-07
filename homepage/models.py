@@ -50,6 +50,23 @@ class Stocktake_data(models.Model):
         return f'Stocktake ID: {self.stocktake_id}, Material ID: {self.material_id}'
     class Meta:
         verbose_name_plural = "Stocktake Data"
+
+class Orders(models.Model):
+    order_id = models.AutoField(primary_key=True)
+    datestamp = models.DateField(auto_now_add=True)
+    supplier_id = models.ForeignKey(Suppliers, on_delete=models.SET_NULL, null=True, blank=True)
+    order_status = models.CharField(max_length=100)
+    def __str__(self):
+        return f'Order ID: {self.order_id}, Date: {self.datestamp}, Supplier: {self.supplier_id}, Status: {self.order_status}'
+    
+class Orders_data(models.Model):
+    order_id = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    material_id = models.ForeignKey(Materials, on_delete=models.CASCADE)
+    quantity = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
+    def __str__(self):
+        return f'Order ID: {self.order_id}, Material ID: {self.material_id}, Quantity: {self.quantity}'
+    class Meta:
+        verbose_name_plural = "Order Data"
     
 class Drawings(models.Model):
     pdf_file = models.FileField(upload_to='drawings/')

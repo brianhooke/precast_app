@@ -159,8 +159,6 @@ function postNewSuppliers() {
         rowData['supplier_id'] = isFixedRow ? cells[0].getAttribute('data-supplier-id') : '';
         data.push(rowData);
     }
-    console.log("here comes the filtered data to be posted")
-    console.log(data);
     // Send the data to the server
     fetch('/update_suppliers/', {
         method: 'POST',
@@ -189,8 +187,6 @@ function postNewSuppliers() {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    console.log(suppliers);
-    // Event listener for the Suppliers link
 document.querySelector('#suppliersLink').addEventListener('click', function(event) {
     event.preventDefault();
     // Call the showSuppliers function with the suppliers data

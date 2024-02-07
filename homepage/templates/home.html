@@ -13,7 +13,7 @@
     left: 10%;
     width: 90%;
     height: 100%;
-    background-image: url('{% static "images/shadow_2.png" %}');
+    background-image: url('{% static "images/sv2.png" %}');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -25,7 +25,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.5);
     "></div>
 </div>
 
@@ -62,7 +62,9 @@
 {{ drawings|json_script:"drawings" }}
 {{ stocktake|json_script:"stocktake" }}
 {{ stocktake_data|json_script:"stocktake_data" }}
-
+{{ shelf_stock|json_script:"shelf_stock" }}
+{{ orders|json_script:"orders" }}
+{{ orders_data|json_script:"orders_data" }}
 
 <script> 
 // CSV Upload Script for Materials
@@ -115,17 +117,15 @@ function uploadCSV(event, url) {
 
 <script>
     var suppliers = JSON.parse(document.getElementById('suppliers').textContent);
-    suppliers.forEach(supplier => console.log(supplier));
-    // Parse the materials data and attach it to the global variable
     var materials = JSON.parse(document.getElementById('materials').textContent);
-    // Now you can use the global materials variable
-    materials.forEach(material => console.log(material));
     var bom = JSON.parse(document.getElementById('bom').textContent);
-    bom.forEach(bomItem => console.log(bomItem));
     var drawings = JSON.parse(document.getElementById('drawings').textContent);
     var stocktake = JSON.parse(document.getElementById('stocktake').textContent);
     var stocktake_data = JSON.parse(document.getElementById('stocktake_data').textContent);
-    console.log('stocktake_data:', stocktake_data);
+    var shelf_stock = JSON.parse(document.getElementById('shelf_stock').textContent);
+    var orders = JSON.parse(document.getElementById('orders').textContent);
+    var orders_data = JSON.parse(document.getElementById('orders_data').textContent);
+    console.log('shelf_stock:', shelf_stock);
 </script>
 
 <script src="{% static 'js/suppliers.js' %}"></script>
@@ -133,6 +133,8 @@ function uploadCSV(event, url) {
 <script src="{% static 'js/bom.js' %}"></script>
 <script src="{% static 'js/stocktake.js' %}"></script>
 <script src="{% static 'js/drawings.js' %}"></script>
+<script src="{% static 'js/orders.js' %}"></script>
+
 
 
 

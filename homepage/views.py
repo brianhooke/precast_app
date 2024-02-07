@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.db import transaction
+from django.db.models import Sum
 from django.http import HttpResponse
-from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings
+from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings, Orders, Orders_data
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F
@@ -25,6 +26,8 @@ def home(request):
     suppliers = Suppliers.objects.all().values()
     materials = Materials.objects.all().annotate(supplier_name=F('supplier_id__name')).values()
     bom = Bom.objects.all().values()
+    orders = Orders.objects.select_related('supplier_id').values('order_id', 'datestamp', 'order_status', 'supplier_id__name')
+    orders_data=Orders_data.objects.all().values()
     # Convert suppliers to a dictionary for easy lookup
     suppliers_dict = {supplier['supplier_id']: supplier['name'] for supplier in suppliers}
     # Convert materials to a dictionary for easy lookup
@@ -44,8 +47,10 @@ def home(request):
         }
         for item in stocktake_data
     ]
-    logger.info('Materials data here it comes:')
-    logger.info(materials)
+    # Get the sum of 'amount' for each material
+    shelf_stock = Materials.objects.annotate(quantity=Sum('stocktake_data__amount')).values('material', 'quantity')
+    # Convert QuerySet to list
+    shelf_stock = list(shelf_stock)
     # Add wastage_adjusted_quantity to each bom
     for bom_item in bom:
         material = materials_dict.get(bom_item['material_id_id'])
@@ -55,7 +60,7 @@ def home(request):
     drawings = Drawings.objects.all().order_by('id')  # Fetch all drawings ordered by id
     drawings_data = [{'id': drawing.id, 'pdf_file': drawing.pdf_file.url} for drawing in drawings]    # logger.info('Suppliers: %s', list(suppliers))
     # logger.info('Materials: %s', list(materials))
-    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data, 'stocktake': stocktake, 'stocktake_data': stocktake_data})
+    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data, 'stocktake': stocktake, 'stocktake_data': stocktake_data, 'shelf_stock': shelf_stock, 'orders': list(orders), 'orders_data': list(orders_data)})
 
 @csrf_exempt
 def update_suppliers(request):
@@ -206,3 +211,18 @@ def upload_drawing(request):
     else:
         form = DrawingUploadForm()
     return render(request, 'home.html', {'form': form})
+
+@csrf_exempt
+def upload_order(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        order = Orders(supplier_id=Suppliers.objects.get(supplier_id=data['supplier_id']), order_status=data['order_status'])
+        order.save()
+        for item in data['data']:
+            material = Materials.objects.get(material_id=item['material_id'])
+            quantity = item['quantity']
+            order_data = Orders_data(order_id=order, material_id=material, quantity=quantity)
+            order_data.save()
+        return JsonResponse({'order_id': order.order_id})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)

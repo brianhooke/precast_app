@@ -89,13 +89,10 @@ function showDrawings(drawings_sorted) {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector('#drawingsLink').addEventListener('click', function(event) {
-        console.log("I've been clicked");
         event.preventDefault();
         // Create a new array with additional properties
         let drawings_extended = drawings.map(drawing => {
             let name = drawing.pdf_file.split('/').pop().replace('.pdf', '');
-            console.log("name here:");
-            console.log(name);
             let type = name.startsWith('PP') ? 'Panel' : name.startsWith('STR') ? 'Structural' : name.startsWith('ARR') ? 'Arrangement' : '';
             if (type === 'Arrangement') {
                 name = name.replace('ARR-', '');  // Trim 'OTH-' from the start of the name
@@ -130,7 +127,6 @@ document.getElementById('uploadButton').addEventListener('click', function(e) {
             var file = fileInput.files[i];
             formData.append('pdf_file', file);  // Append each file
         }
-        console.log('Sending files:', formData);
         fetch('/upload_drawing/', {  // Replace '/upload-drawing/' with the URL of your upload view
             method: 'POST',
             body: formData

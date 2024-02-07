@@ -1,7 +1,5 @@
 // Function to create and show the modal
 function showStocktakeButtons(stocktake, stocktake_data) {
-    console.log("MMMaterials");
-    console.log(materials);
     var modalHtml = `
     <div class="modal fade" id="stocktakeButtonsModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="max-width: 300px;">
@@ -60,8 +58,6 @@ function showStocktakeButtons(stocktake, stocktake_data) {
 
 //New Stocktake Snap Modal
 function newStocktakeSnapModal(materials) {
-    console.log("MMMaterials");
-    console.log(materials);
     var modalHtml = `
     <div class="modal fade" id="newStocktakeModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="max-width: 500px;">
@@ -114,11 +110,11 @@ function newStocktakeSnapModal(materials) {
     document.getElementById("snapDate").value = today;
     $('#newStocktakeModal').modal('show');
 }
+
 function upload_stocktake() {
     var data = [];
     var rows = document.querySelectorAll('tr');
     rows.forEach(function(row) {
-        console.log(row);
         var td = row.querySelector('td[data-material-id]');
         if (td) {
             var material_id = td.dataset.materialId;
@@ -195,9 +191,7 @@ function oldStocktakeSnapModal(stocktake, stocktake_data, materials) {
 }
 
 function showOldStocktakeDataModal(stocktake_pk, stocktake_data, materials) {
-    console.log("stocktake_pk: ", stocktake_pk);
-    console.log("stocktake_data: ", stocktake_data);
-    console.log("materials: ", materials);
+    $('#oldStocktakeModal').modal('hide');
     var modalHtml = `
     <div class="modal fade" id="OldStocktakeDataModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="max-width: 500px;">
@@ -216,7 +210,6 @@ function showOldStocktakeDataModal(stocktake_pk, stocktake_data, materials) {
                             <th>Quantity</th>
                         </tr>`;
                 for (let materialItem of materials) {
-                    console.log("materialItem: ", materialItem)
                     let amount = '';
                     for (let stocktakeItem of stocktake_data) {
                         if (stocktakeItem.material_id === materialItem.material_id && stocktakeItem.stocktake_id === stocktake_pk) {
@@ -249,14 +242,26 @@ function showOldStocktakeDataModal(stocktake_pk, stocktake_data, materials) {
     var modalElement = document.createElement('div');
     modalElement.innerHTML = modalHtml;
     document.body.appendChild(modalElement);
+    var modalElement = document.createElement('div');
+    modalElement.innerHTML = modalHtml;
+    document.body.appendChild(modalElement);
+    $('#OldStocktakeDataModal').on('shown.bs.modal', function (e) {
+        document.body.classList.add('modal-open');
+    });
+    // Attach an event listener to the Cancel button
+    $('#OldStocktakeDataModal .btn-secondary').on('click', function (e) {
+        $('#OldStocktakeDataModal').modal('hide');
+    });
+
+    $('#OldStocktakeDataModal').on('hidden.bs.modal', function (e) {
+        $('#OldStocktakeDataModal').remove();
+    });
     // document.getElementById('saveNewStocktakeButton').addEventListener('click', upload_stocktake);
     $('#OldStocktakeDataModal').modal('show');
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    console.log("here comes stocktake: ", stocktake);
 document.querySelector('#stocktakeLink').addEventListener('click', function(event) {
-    console.log("and it can hear the click");
     event.preventDefault();
     // Call the showSuppliers function with the suppliers data
     showStocktakeButtons(stocktake);
