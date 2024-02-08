@@ -159,7 +159,7 @@ function newOrder() {
             }).show();
         }
     });
-    document.getElementById('createOrderBtn').addEventListener('click', upload_stocktake);
+    document.getElementById('createOrderBtn').addEventListener('click', upload_order);
     // Remove the modal from the document when it's closed
     $('#newOrderModal').on('hidden.bs.modal', function (e) {
         $('#newOrderModal').remove();
@@ -275,14 +275,14 @@ function pendingOrder(order_id) {
             }).show();
         }
     });
-    document.getElementById('createOrderBtn').addEventListener('click', upload_stocktake);
+    document.getElementById('createOrderBtn').addEventListener('click', upload_order);
     // Remove the modal from the document when it's closed
     $('#newOrderModal').on('hidden.bs.modal', function (e) {
         $('#newOrderModal').remove();
     });
 }
 
-function upload_stocktake() {
+function upload_order() {
     var data = [];
     var rows = $('#newOrderModal table tbody tr:visible'); // Use jQuery to select visible rows
     rows.each(function() {
@@ -303,13 +303,28 @@ function upload_stocktake() {
     });
     var supplier_id = $('#supplierSelect').val();
     var order_status = 1; //1 is for pending orders
-    console.log({'data': data, 'supplier_id': supplier_id, 'order_status': order_status });
-    fetch('/upload_order/', {
+    var url, body;
+    if (supplier_id === "openingStock") {
+        url = '/upload_stocktake/';
+        body = JSON.stringify({
+            'data': data.map(item => ({...item, amount: item.quantity})),
+            'stocktake_type': 1,
+            'date': new Date().toISOString().slice(0,10)
+        });
+    } else {
+        url = '/upload_order/';
+        body = JSON.stringify({
+            'data': data,
+            'supplier_id': supplier_id,
+            'order_status': order_status
+        });
+    }
+    fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({'data': data, 'supplier_id': supplier_id, 'order_status': order_status }),
+        body: body,
     })
     .then(response => {
         if (!response.ok) {

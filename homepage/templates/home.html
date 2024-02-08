@@ -34,27 +34,26 @@
 </div>
 <p style="text-align:center; color: white;" >5/43 Accolade Avenue</p>
 
-<!-- CSV Upload Form -->
 <!-- CSV Upload Form for Materials -->
 <form action="{% url 'materials_upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file" id="csv_file_materials" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
-    <button type="button" onclick="document.getElementById('csv_file_materials').click();">Upload CSV for Materials</button>
+    <input type="file" id="csv_file_materials" name="csv_file" accept=".csv" style="display: none;" onchange="console.log('Materials file input changed'); this.form.submit();">
+    <button type="button" onclick="console.log('Materials button clicked'); document.getElementById('csv_file_materials').click();">Upload CSV for Materials</button>
 </form>
 
 <!-- CSV Upload Form for Bom -->
 <form action="{% url 'bom_upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file" id="csv_file_bom" name="csv_file" accept=".csv" style="display: none;" onchange="this.form.submit();">
-    <button type="button" onclick="document.getElementById('csv_file_bom').click();">Upload CSV for Bom</button>
+    <input type="file" id="csv_file_bom" name="csv_file" accept=".csv" style="display: none;" onchange="console.log('BOM file input changed'); this.form.submit();">
+    <button type="button" onclick="console.log('BOM button clicked'); document.getElementById('csv_file_bom').click();">Upload CSV for Bom</button>
 </form>
 
 <!-- Drawing Upload Form -->
-<!-- <form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file" id="pdfUpload" multiple name="{{ form.pdf_file.name }}" accept=".pdf" style="display: none;" />
-    <button id="uploadButton" type="button">Upload Drawings</button>
-</form> -->
+    <input type="file" id="pdfUpload" multiple name="{{ form.pdf_file.name }}" accept=".pdf" style="display: none;" onchange="console.log('Drawings file input changed');" />
+    <button id="uploadButton" type="button" onclick="console.log('Drawings button clicked'); document.getElementById('pdfUpload').click();">Upload Drawings</button>
+</form>
 
 {{ suppliers|json_script:"suppliers" }}
 {{ materials|json_script:"materials" }}
@@ -69,10 +68,12 @@
 <script> 
 // CSV Upload Script for Materials
 document.getElementById('csv_file_materials').addEventListener('change', function(event) {
+    console.log('event:', event);
     uploadCSV(event, '{% url 'materials_upload' %}');
 });
 // CSV Upload Script for Bom
 document.getElementById('csv_file_bom').addEventListener('change', function(event) {
+    console.log('event2:', event);
     uploadCSV(event, '{% url 'bom_upload' %}');
 });
 

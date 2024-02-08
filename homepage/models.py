@@ -36,6 +36,7 @@ class Bom(models.Model):
     
 class Stocktake(models.Model):
     stocktake_id = models.AutoField(primary_key=True)
+    stocktake_type = models.CharField(max_length=100) #1 to denote opening stock, 2 to denote ongoing stocktakes
     datestamp = models.DateField(auto_now_add=True)    
     def __str__(self):
         return f'Stocktake ID: {self.stocktake_id}, Date: {self.datestamp}'

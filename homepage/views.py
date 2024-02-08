@@ -18,8 +18,8 @@ from .forms import DrawingUploadForm
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-# handler = RotatingFileHandler('application.log', maxBytes=2000, backupCount=10)
-# logger.addHandler(handler)
+handler = RotatingFileHandler('application.log', maxBytes=2000, backupCount=10)
+logger.addHandler(handler)
 
 # Create your views here.
 def home(request):
@@ -184,7 +184,7 @@ def bom_upload(request):
 def upload_stocktake(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        stocktake = Stocktake(datestamp=data['date'])
+        stocktake = Stocktake(stocktake_type=data['stocktake_type'], datestamp=data['date'])
         stocktake.save()
         for item in data['data']:
             material = Materials.objects.get(material_id=item['material_id'])
