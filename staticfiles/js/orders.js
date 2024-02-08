@@ -285,23 +285,28 @@ function pendingOrder(order_id) {
 function upload_order() {
     var data = [];
     var rows = $('#newOrderModal table tbody tr:visible'); // Use jQuery to select visible rows
+    var supplier_id = $('#supplierSelect').val();
     rows.each(function() {
         var row = $(this);
         var cells = row.find('td');
         var material_id = row.data('material-id'); // Get 'material_id' from the row's dataset
-        var orderQty = Number(cells.eq(8).find('input').val()); // Convert orderQty to a number
-        if (isNaN(orderQty)) {
-            orderQty = null;
-        }
-        // Only push data where quantity is not equal to 0
-        if (orderQty !== 0) {
+        var inputVal = cells.eq(8).find('input').val();
+        var orderQty = !isNaN(inputVal) && inputVal !== '' ? Number(inputVal) : 0; // Convert orderQty to a number only if it's a number
+        console.log('orderQty:', orderQty); // Log orderQty
+        // If supplier_id equals "openingStock", push all rows' material_id's and orderQty (even if orderQty is 0)
+        if (supplier_id === "openingStock") {
+            data.push({
+                'material_id': material_id,
+                'quantity': orderQty
+            });
+        } else if (orderQty !== 0) { // If supplier_id is not "openingStock", only push rows where orderQty is not 0
             data.push({
                 'material_id': material_id,
                 'quantity': orderQty
             });
         }
     });
-    var supplier_id = $('#supplierSelect').val();
+    console.log('Data to be sent:', data); // Log data to be sent
     var order_status = 1; //1 is for pending orders
     var url, body;
     if (supplier_id === "openingStock") {

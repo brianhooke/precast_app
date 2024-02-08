@@ -12,7 +12,7 @@ class BomAdmin(admin.ModelAdmin):
     list_display = ("material_id", "quantity")
 
 class StocktakeAdmin(admin.ModelAdmin):
-    list_display = ("stocktake_id", "datestamp")
+    list_display = ("stocktake_id", "stocktake_type", "datestamp")
 
 class Stocktake_dataAdmin(admin.ModelAdmin):
     list_display = ("stocktake_id", "material_id", "amount")
