@@ -995,3 +995,76 @@ Not Found: /favicon.ico
 /Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/admin.py changed, reloading.
 Watching for file changes with StatReloader
 Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/admin.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/urls.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Internal Server Error: /receive_order/
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 238, in receive_order
+    quantity = Decimal(item.get('quantity'))
+               ^^^^^^^
+NameError: name 'Decimal' is not defined
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico

@@ -24,7 +24,7 @@ class OrdersAdmin(admin.ModelAdmin):
     list_display = ("order_id", "datestamp", "supplier_id", "order_status")
 
 class Orders_dataAdmin(admin.ModelAdmin):
-    list_display = ("order_id", "material_id", "quantity")
+    list_display = ("order_id", "material_id", "rate", "quantity")
 
 admin.site.register(Suppliers, SuppliersAdmin)
 admin.site.register(Materials, MaterialsAdmin)

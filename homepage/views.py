@@ -15,6 +15,8 @@ from logging.handlers import RotatingFileHandler
 import io
 import chardet
 from .forms import DrawingUploadForm
+from decimal import Decimal
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -221,8 +223,24 @@ def upload_order(request):
         for item in data['data']:
             material = Materials.objects.get(material_id=item['material_id'])
             quantity = item['quantity']
-            order_data = Orders_data(order_id=order, material_id=material, quantity=quantity)
+            rate = item['rate']  # Extract the rate from the item
+            order_data = Orders_data(order_id=order, material_id=material, quantity=quantity, rate=rate)  # Include the rate when creating the Orders_data object
             order_data.save()
         return JsonResponse({'order_id': order.order_id})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def receive_order(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        for item in data:
+            order_id = item.get('order_id')
+            material_id = item.get('material_id')
+            quantity = Decimal(item.get('quantity'))
+            rate = Decimal(item.get('rate'))
+            Orders_data.objects.filter(order_id=order_id, material_id=material_id).update(quantity=quantity, rate=rate)
+            Orders.objects.filter(order_id=order_id).update(order_status='2')
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'failed', 'error': 'Invalid request method'})

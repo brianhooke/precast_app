@@ -15,4 +15,5 @@ urlpatterns = [
     path('upload_stocktake/', views.upload_stocktake, name='upload_stocktake'),
     path('upload_drawing/', views.upload_drawing, name='upload_drawing'),
     path('upload_order/', views.upload_order, name='upload_order'),
+    path('receive_order/', views.receive_order, name='receive_order'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

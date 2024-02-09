@@ -73,7 +73,7 @@ function newOrder() {
                     <table>
                         <thead>
                             <tr>
-                                <th>Materials</th>
+                                <th>Material</th>
                                 <th>Supplier</th>
                                 <th>Units</th>
                                 <th>$/Unit</th>
@@ -185,9 +185,11 @@ function showPendingOrders() {
                         let formattedDate = date.getDate() + '-' + date.toLocaleString('default', { month: 'short' }) + '-' + date.getFullYear();
                         modalHtml += `
                         <tr>
-                            <td>${order.supplier_id__name}</td>
+                            <td>
+                                <a href="#" onclick="existingOrder(${order.order_id});">${order.supplier_id__name}</a>
+                            </td>
                             <td data-order-id="${order.order_id}">
-                                <a href="#" onclick="pendingOrder(${order.order_id});">${formattedDate}</a>
+                                <a href="#" onclick="existingOrder(${order.order_id});">${formattedDate}</a>
                             </td>
                         </tr>`;
                     }
@@ -255,10 +257,8 @@ function pendingOrder(order_id) {
     document.body.appendChild(modalElement);
     // Show the modal
     $('#newOrderModal').modal('show');
-
     // Initially hide all rows except the first one (headers)
     $('#newOrderModal table tr:not(:first)').hide();
-
     // Add an event listener to the dropdown box
     $('#supplierSelect').on('change', function() {
         var selectedSupplier = $(this).val();
@@ -292,17 +292,20 @@ function upload_order() {
         var material_id = row.data('material-id'); // Get 'material_id' from the row's dataset
         var inputVal = cells.eq(8).find('input').val();
         var orderQty = !isNaN(inputVal) && inputVal !== '' ? Number(inputVal) : 0; // Convert orderQty to a number only if it's a number
+        var rate = Number(cells.eq(3).text().replace(/[^0-9.-]+/g,"")); // Get the rate from the fourth cell and parse it to a number
         console.log('orderQty:', orderQty); // Log orderQty
         // If supplier_id equals "openingStock", push all rows' material_id's and orderQty (even if orderQty is 0)
         if (supplier_id === "openingStock") {
             data.push({
                 'material_id': material_id,
-                'quantity': orderQty
+                'quantity': orderQty,
+                'rate': rate
             });
         } else if (orderQty !== 0) { // If supplier_id is not "openingStock", only push rows where orderQty is not 0
             data.push({
                 'material_id': material_id,
-                'quantity': orderQty
+                'quantity': orderQty,
+                'rate': rate
             });
         }
     });
@@ -346,6 +349,120 @@ function upload_order() {
     .catch((error) => {
         console.error('Error:', error);
         alert('Error: There was a problem sending the data.');
+    });
+}
+
+function existingOrder(order_id) {
+    console.log('Order ID:', order_id);
+    var matchingOrder = orders.find(order => order.order_id === order_id);
+    console.log('Matching Order:', matchingOrder);
+    var supplierName = matchingOrder ? matchingOrder.supplier_id__name : '';
+    var formattedDate = matchingOrder ? new Date(matchingOrder.datestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }) : '';
+    var matchingOrdersData = orders_data.filter(orderData => orderData.order_id_id === order_id);
+    console.log('Matching Orders Data:', matchingOrdersData);
+    var modalHtml = `
+    <div class="modal fade" id="existingOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="max-width: 800px;">
+            <div class="modal-content" style="border: 3px solid black;">
+                <div class="modal-header" style="text-align: center; background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%);">
+                    <h5 class="modal-title">${supplierName} Order: ${formattedDate}</h5>
+                <p></p>
+                </div>
+                <div class="modal-body" style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Material</th>
+                                <th>Units</th>
+                                <th>$/Unit</th>
+                                <th>Pack Size</th>
+                                <th style="width: 25%;">Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                        var totalCost = 0;
+                        for (let orderData of matchingOrdersData) {
+                            let matchingMaterial = materials.find(material => material.material_id === orderData.material_id_id);
+                            console.log('Matching Material:', matchingMaterial);
+                            if (matchingMaterial) {
+                                modalHtml += `
+                                    <tr data-supplier-id="${matchingMaterial.supplier_id}" data-material-id="${matchingMaterial.material_id}">
+                                        <td>${matchingMaterial.material}</td>
+                                        <td>${matchingMaterial.units}</td>
+                                        <td style="width: 25%;"><input type="number" value="${orderData.rate}" placeholder="${orderData.rate}" min="0" style="width: 100%;"></td>
+                                        <td>${Math.round(matchingMaterial.supplier_increments)}</td>
+                                        <td style="width: 25%;"><input type="number" value="${orderData.quantity}" min="0" style="width: 100%;"></td>
+                                    </tr>`;
+                                totalCost += orderData.rate * orderData.quantity;  // Calculate the cost of the item and add it to the total cost
+                            }
+                        }
+                        modalHtml += `
+                                <tr>
+                                <td>Total</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="modal-footer">
+                        <div class="col-6 text-left">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        <div class="col-6 text-right">
+                            <button type="button" class="btn btn-primary update-completed-values" id="receiveOrderBtn">Order Received</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+    var modalElement = document.createElement('div');
+    modalElement.innerHTML = modalHtml;
+    document.body.appendChild(modalElement);
+    $('#existingOrderModal').modal('show');
+    // Add an event listener to the dropdown box
+    // Add an event listener to the dropdown box
+    document.getElementById('receiveOrderBtn').addEventListener('click', function() {
+        receive_order(order_id);
+    });    // Remove the modal from the document when it's closed
+    $('#existingOrderModal').on('hidden.bs.modal', function (e) {
+        $('#existingOrderModal').remove();
+    });
+}
+
+function receive_order(order_id) {
+    var data = [];
+    var rows = document.querySelectorAll('#existingOrderModal tbody tr');
+    rows.forEach(function(row) {
+        var material_id = row.getAttribute('data-material-id');
+        var quantityInput = row.querySelector('td:nth-child(5) input[type="number"]');
+        var rateInput = row.querySelector('td:nth-child(3) input[type="number"]');
+        var quantity = quantityInput ? quantityInput.value : 0;
+        var rate = rateInput ? rateInput.value : 0;
+        data.push({
+            'order_id': order_id,
+            'material_id': material_id,
+            'quantity': quantity,
+            'rate': rate
+        });
+    });
+    console.log(data);  // Log the data array
+    fetch('/receive_order/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
     });
 }
 
