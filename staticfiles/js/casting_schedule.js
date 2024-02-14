@@ -25,12 +25,14 @@ function castingScheduleModal() {
                     for (let date of uniqueDates) {
                         let formattedDate = new Date(date);
                         formattedDate = formattedDate.getDate() + '-' + formattedDate.toLocaleString('default', { month: 'short' }) + '-' + formattedDate.getFullYear();
+                        // Count the number of panels for this date
+                        let panelCount = casting_schedule.filter(schedule => schedule.schedule_date === date).length;
                         modalHtml += `
                         <tr>
                             <td>
                                 <a href="#" onclick="existingSchedule('${date}')">${date}</a>                        
                             </td>
-                            <td>99</td>
+                            <td>${panelCount}</td>
                             <td>99</td>
                         </tr>`;
                     }
