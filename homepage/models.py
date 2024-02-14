@@ -76,3 +76,24 @@ class Drawings(models.Model):
         return self.pdf_file.name  # Return the name of the uploaded file
     class Meta:
         verbose_name_plural = "Drawings"
+
+class Panels(models.Model):
+    panel_id = models.IntegerField(primary_key=True)  
+    panel_width = models.DecimalField(max_digits=12, decimal_places=2)
+    panel_length = models.DecimalField(max_digits=12, decimal_places=2)
+    panel_position_x = models.DecimalField(max_digits=12, decimal_places=2)
+    panel_position_y = models.DecimalField(max_digits=12, decimal_places=2)
+    panel_rotation = models.BooleanField(default=False)
+    def __str__(self):
+        return f'Panel ID: {self.panel_id}, Width: {self.panel_width}, Length: {self.panel_length}, Rotation: {self.panel_rotation}'
+    class Meta:
+        verbose_name_plural = "Panels"
+
+class Casting_schedule(models.Model):
+    schedule_id = models.AutoField(primary_key=True)
+    schedule_date = models.DateField()  # User needs to select a date
+    panel_id = models.ForeignKey(Panels, on_delete=models.CASCADE)
+    def __str__(self):
+        return f'Schedule ID: {self.schedule_id}, Date: {self.schedule_date}, Panel ID: {self.panel_id}'
+    class Meta:
+        verbose_name_plural = "Casting Schedule"

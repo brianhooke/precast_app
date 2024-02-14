@@ -13,12 +13,14 @@
     left: 10%;
     width: 90%;
     height: 100%;
-    background-image: url('{% static "images/sv2.png" %}');
+    background-image: url('{% static "images/mp.png" %}');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     z-index: -1;
 ">
+
+
     <div style="
         position: absolute;
         top: 0;
@@ -64,6 +66,9 @@
 {{ shelf_stock|json_script:"shelf_stock" }}
 {{ orders|json_script:"orders" }}
 {{ orders_data|json_script:"orders_data" }}
+{{ panels|json_script:"panels" }}
+{{ casting_schedule|json_script:"casting_schedule" }}
+
 
 <script> 
 // CSV Upload Script for Materials
@@ -126,7 +131,9 @@ function uploadCSV(event, url) {
     var shelf_stock = JSON.parse(document.getElementById('shelf_stock').textContent);
     var orders = JSON.parse(document.getElementById('orders').textContent);
     var orders_data = JSON.parse(document.getElementById('orders_data').textContent);
-    console.log('Orders Data:', orders_data);
+    var panels = JSON.parse(document.getElementById('panels').textContent);
+    var casting_schedule = JSON.parse(document.getElementById('casting_schedule').textContent);
+    // console.log('Orders Data:', orders_data);
 </script>
 
 <script src="{% static 'js/suppliers.js' %}"></script>
@@ -135,6 +142,11 @@ function uploadCSV(event, url) {
 <script src="{% static 'js/stocktake.js' %}"></script>
 <script src="{% static 'js/drawings.js' %}"></script>
 <script src="{% static 'js/orders.js' %}"></script>
+<script src="{% static 'js/casting_schedule.js' %}"></script>
+<script>
+    var bedLayoutImageUrl = "{% static 'images/bed_layout.png' %}";
+</script>
+
 
 
 

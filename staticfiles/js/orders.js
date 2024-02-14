@@ -41,6 +41,11 @@ function showOrderButtons() {
         lastClicked = 'pendingOrdersBtn';
         $('#OrderButtonsModal').modal('hide');
     });
+    document.querySelector('#pastOrdersBtn').addEventListener('click', function(event) {
+        event.preventDefault();
+        lastClicked = 'pastOrdersBtn';
+        $('#OrderButtonsModal').modal('hide');
+    });
     $('#OrderButtonsModal').on('hidden.bs.modal', function (e) {
         $('#OrderButtonsModal').remove();
         if (lastClicked === 'newOrderBtn') {
@@ -48,7 +53,7 @@ function showOrderButtons() {
         } else if (lastClicked === 'pendingOrdersBtn') {
             showPendingOrders();
         } else if (lastClicked === 'pastOrdersBtn') {
-            yetToAddOrderModal3();
+            showPastOrders();
         }
     });
 }
@@ -181,17 +186,19 @@ function showPendingOrders() {
                         <th>Date</th>
                     </tr>`;
                     for (let order of orders) {
-                        let date = new Date(order.datestamp);
-                        let formattedDate = date.getDate() + '-' + date.toLocaleString('default', { month: 'short' }) + '-' + date.getFullYear();
-                        modalHtml += `
-                        <tr>
-                            <td>
-                                <a href="#" onclick="existingOrder(${order.order_id});">${order.supplier_id__name}</a>
-                            </td>
-                            <td data-order-id="${order.order_id}">
-                                <a href="#" onclick="existingOrder(${order.order_id});">${formattedDate}</a>
-                            </td>
-                        </tr>`;
+                        if (order.order_status === '1') {
+                            let date = new Date(order.datestamp);
+                            let formattedDate = date.getDate() + '-' + date.toLocaleString('default', { month: 'short' }) + '-' + date.getFullYear();
+                            modalHtml += `
+                            <tr>
+                                <td>
+                                    <a href="#" onclick="existingOrder(${order.order_id});">${order.supplier_id__name}</a>
+                                </td>
+                                <td data-order-id="${order.order_id}">
+                                    <a href="#" onclick="existingOrder(${order.order_id});">${formattedDate}</a>
+                                </td>
+                            </tr>`;
+                        }
                     }
                     modalHtml += `
                 </table>
@@ -343,8 +350,7 @@ function upload_order() {
     .then(data => {
         console.log('Success:', data);
         alert('Success: Order Successfully Saved.');
-        // Close the modal
-        $('#newOrderModal').modal('hide');
+        location.reload();
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -402,7 +408,7 @@ function existingOrder(order_id) {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                <td>$${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -460,11 +466,133 @@ function receive_order(order_id) {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
+        alert('Success: Order Successfully Received.');
+        location.reload();
     })
     .catch((error) => {
         console.error('Error:', error);
     });
 }
+
+function showPastOrders() {
+    var modalHtml = `
+    <div class="modal fade" id="pastOrders" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="max-width: 300px;">
+            <div class="modal-content" style="border: 3px solid black;">
+                <div class="modal-header" style="text-align: center; background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%);">
+                    <h5 class="modal-title">Past Orders</h5>
+                </div>           
+                <div class="modal-body" style="overflow-x: auto;">
+                <table>
+                    <tr>
+                        <th>Supplier</th>
+                        <th>Date</th>
+                    </tr>`;
+                    for (let order of orders) {
+                        if (order.order_status === '2') {
+                            let date = new Date(order.datestamp);
+                            let formattedDate = date.getDate() + '-' + date.toLocaleString('default', { month: 'short' }) + '-' + date.getFullYear();
+                            modalHtml += `
+                            <tr>
+                                <td>
+                                    <a href="#" onclick="pastOrder(${order.order_id});">${order.supplier_id__name}</a>
+                                </td>
+                                <td data-order-id="${order.order_id}">
+                                    <a href="#" onclick="pastOrder(${order.order_id});">${formattedDate}</a>
+                                </td>
+                            </tr>`;
+                        }
+                    }
+                    modalHtml += `
+                </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-6 text-left">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  `;
+    var modalElement = document.createElement('div');
+    modalElement.innerHTML = modalHtml;
+    document.body.appendChild(modalElement);
+    $('#pastOrders').modal('show');
+}
+
+
+function pastOrder(order_id) {
+    var matchingOrder = orders.find(order => order.order_id === order_id);
+    var supplierName = matchingOrder ? matchingOrder.supplier_id__name : '';
+    var formattedDate = matchingOrder ? new Date(matchingOrder.datestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }) : '';
+    var matchingOrdersData = orders_data.filter(orderData => orderData.order_id_id === order_id);
+    console.log('Matching Orders Data:', matchingOrdersData);
+    var modalHtml = `
+    <div class="modal fade" id="pastOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="max-width: 800px;">
+            <div class="modal-content" style="border: 3px solid black;">
+                <div class="modal-header" style="text-align: center; background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%);">
+                    <h5 class="modal-title">${supplierName} Order: ${formattedDate}</h5>
+                <p></p>
+                </div>
+                <div class="modal-body" style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Material</th>
+                                <th>Units</th>
+                                <th>$/Unit</th>
+                                <th>Pack Size</th>
+                                <th style="width: 25%;">Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                        var totalCost = 0;
+                        for (let orderData of matchingOrdersData) {
+                            let matchingMaterial = materials.find(material => material.material_id === orderData.material_id_id);
+                            console.log('Matching Material:', matchingMaterial);
+                            if (matchingMaterial) {
+                                modalHtml += `
+                                    <tr data-supplier-id="${matchingMaterial.supplier_id}" data-material-id="${matchingMaterial.material_id}">
+                                        <td>${matchingMaterial.material}</td>
+                                        <td>${matchingMaterial.units}</td>
+                                        <td style="width: 25%;">${orderData.rate}</td>
+                                        <td>${Math.round(matchingMaterial.supplier_increments)}</td>
+                                        <td style="width: 25%;">${orderData.quantity}</td>
+                                    </tr>`;
+                                totalCost += orderData.rate * orderData.quantity;  // Calculate the cost of the item and add it to the total cost
+                            }
+                        }
+                        modalHtml += `
+                                <tr>
+                                <td>Total</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>$${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="modal-footer">
+                        <div class="col-6 text-left">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+    var modalElement = document.createElement('div');
+    modalElement.innerHTML = modalHtml;
+    document.body.appendChild(modalElement);
+    $('#pastOrderModal').modal('show');
+    $('#pastOrderModal').on('hidden.bs.modal', function (e) {
+        $('#pastOrderModal').remove();
+    });
+}
+
 
 
 document.addEventListener('DOMContentLoaded', (event) => {

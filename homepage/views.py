@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.db import transaction
 from django.db.models import Sum
 from django.http import HttpResponse
-from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings, Orders, Orders_data
+from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings, Orders, Orders_data, Panels, Casting_schedule
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F
@@ -61,8 +61,10 @@ def home(request):
             bom_item['material'] = material['material']
     drawings = Drawings.objects.all().order_by('id')  # Fetch all drawings ordered by id
     drawings_data = [{'id': drawing.id, 'pdf_file': drawing.pdf_file.url} for drawing in drawings]    # logger.info('Suppliers: %s', list(suppliers))
+    panels=Panels.objects.all().values()
+    casting_schedule = Casting_schedule.objects.all().values()
     # logger.info('Materials: %s', list(materials))
-    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data, 'stocktake': stocktake, 'stocktake_data': stocktake_data, 'shelf_stock': shelf_stock, 'orders': list(orders), 'orders_data': list(orders_data)})
+    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data, 'stocktake': stocktake, 'stocktake_data': stocktake_data, 'shelf_stock': shelf_stock, 'orders': list(orders), 'orders_data': list(orders_data), 'panels': list(panels), 'casting_schedule': list(casting_schedule)})
 
 @csrf_exempt
 def update_suppliers(request):
@@ -244,3 +246,19 @@ def receive_order(request):
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'failed', 'error': 'Invalid request method'})
+    
+@csrf_exempt
+def update_panel_position_and_size(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        for panel_data in data:
+            try:
+                panel = Panels.objects.get(panel_id=panel_data['panel_id'])
+                panel.panel_position_x = panel_data['panel_position_x']
+                panel.panel_position_y = panel_data['panel_position_y']
+                panel.save()
+            except Panels.DoesNotExist:
+                return JsonResponse({'error': 'Panel not found'}, status=404)
+        return JsonResponse({'message': 'Panels updated successfully'}, status=200)
+    else:
+        return JsonResponse({'error': 'Invalid request'}, status=400)

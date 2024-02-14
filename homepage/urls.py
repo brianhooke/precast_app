@@ -16,4 +16,5 @@ urlpatterns = [
     path('upload_drawing/', views.upload_drawing, name='upload_drawing'),
     path('upload_order/', views.upload_order, name='upload_order'),
     path('receive_order/', views.receive_order, name='receive_order'),
+    path('update-panel-position-and-size/', views.update_panel_position_and_size, name='update-panel-position-and-size'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
