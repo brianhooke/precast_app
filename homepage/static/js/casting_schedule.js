@@ -110,6 +110,10 @@ function existingSchedule(date) {
             let height = $(this).height();
             $(this).width(height);
             $(this).height(width);
+            // Toggle the rotation attribute
+            let rotation = $(this).data('rotation') || 0;
+            rotation = (rotation + 1) % 2;
+            $(this).data('rotation', rotation);
         });
     });
     // Show the modal
@@ -128,10 +132,12 @@ function gatherData() {
     $('.panel').each(function() {
         let panelId = $(this).text();
         let position = $(this).position();
+        let rotation = $(this).data('rotation') || 0;
         data.push({
             panel_id: panelId,
             panel_position_x: position.left,
-            panel_position_y: position.top
+            panel_position_y: position.top,
+            panel_rotation: rotation
         });
     });
     return data;

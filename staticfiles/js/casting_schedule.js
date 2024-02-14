@@ -53,17 +53,12 @@ function castingScheduleModal() {
 }
 
 function existingSchedule(date) {
-    console.log('existingSchedule called with date:', date, 'and scheduleDates:', scheduleDates);
     // Remove any existing modal
     $('#panelLayout').remove();
-    console.log('Input date:', date);
     let panels = JSON.parse(document.getElementById('panels').textContent);
     let casting_schedule = JSON.parse(document.getElementById('casting_schedule').textContent);
-    console.log('Casting schedule:', casting_schedule);
     let scheduled_panel_ids = casting_schedule.filter(schedule => schedule.schedule_date === date).map(schedule => schedule.panel_id_id);
-    console.log('Scheduled panel IDs:', scheduled_panel_ids);
     panels = panels.filter(panel => scheduled_panel_ids.includes(panel.panel_id));
-    console.log('Filtered panels:', panels);
     let formattedDate = new Date(date);
     let day = formattedDate.getDate();
     let month = formattedDate.toLocaleString('default', { month: 'short' });
@@ -115,6 +110,10 @@ function existingSchedule(date) {
             let height = $(this).height();
             $(this).width(height);
             $(this).height(width);
+            // Toggle the rotation attribute
+            let rotation = $(this).data('rotation') || 0;
+            rotation = (rotation + 1) % 2;
+            $(this).data('rotation', rotation);
         });
     });
     // Show the modal
@@ -133,10 +132,12 @@ function gatherData() {
     $('.panel').each(function() {
         let panelId = $(this).text();
         let position = $(this).position();
+        let rotation = $(this).data('rotation') || 0;
         data.push({
             panel_id: panelId,
             panel_position_x: position.left,
-            panel_position_y: position.top
+            panel_position_y: position.top,
+            panel_rotation: rotation
         });
     });
     return data;

@@ -256,6 +256,7 @@ def update_panel_position_and_size(request):
                 panel = Panels.objects.get(panel_id=panel_data['panel_id'])
                 panel.panel_position_x = panel_data['panel_position_x']
                 panel.panel_position_y = panel_data['panel_position_y']
+                panel.panel_rotation = panel_data['panel_rotation']
                 panel.save()
             except Panels.DoesNotExist:
                 return JsonResponse({'error': 'Panel not found'}, status=404)
