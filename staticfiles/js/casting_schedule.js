@@ -122,7 +122,9 @@ function existingSchedule(date) {
     // Add event listener to the 'Create Order' button
     $('#saveConfigurationBtn').on('click', function() {
         let data = gatherData();
-        postData(data);
+        postData(data).then(() => {
+            location.reload();
+        });
     });
 }
 
@@ -142,7 +144,7 @@ function gatherData() {
 
 function postData(data) {
     // Send a POST request to the server
-    fetch('/update-panel-position-and-size/', {
+    return fetch('/update-panel-position-and-size/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
