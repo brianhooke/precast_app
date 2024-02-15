@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.db import transaction
 from django.db.models import Sum
 from django.http import HttpResponse
-from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings, Orders, Orders_data, Panels, Casting_schedule
+from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings, Orders, Orders_data, Panels, Casting_schedule, Panels_bom
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F
@@ -61,9 +61,8 @@ def home(request):
             bom_item['material'] = material['material']
     drawings = Drawings.objects.all().order_by('id')  # Fetch all drawings ordered by id
     drawings_data = [{'id': drawing.id, 'pdf_file': drawing.pdf_file.url} for drawing in drawings]    # logger.info('Suppliers: %s', list(suppliers))
-    panels=Panels.objects.all().values()
+    panels = Panels.objects.all().values('panel_id', 'panel_width', 'panel_length', 'panel_volume', 'panel_position_x', 'panel_position_y', 'panel_rotation', 'schedule_id_id')
     casting_schedule = Casting_schedule.objects.all().values()
-    # logger.info('Materials: %s', list(materials))
     return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data, 'stocktake': stocktake, 'stocktake_data': stocktake_data, 'shelf_stock': shelf_stock, 'orders': list(orders), 'orders_data': list(orders_data), 'panels': list(panels), 'casting_schedule': list(casting_schedule)})
 
 @csrf_exempt
@@ -131,6 +130,41 @@ def materials_upload(request):
                 }
                 material = Materials(**material_data)
                 material.save()
+        return HttpResponse("CSV file uploaded and processed successfully.")
+    else:
+        # Handle the case for non-POST requests
+        pass
+
+@csrf_exempt
+def panels_bom_upload(request):
+    logger.info('about to start panels_bom_upload')
+    if request.method == 'POST':
+        if 'csv_file' not in request.FILES:
+            return HttpResponse("No CSV file uploaded.", status=400)
+        csv_file = request.FILES['csv_file']
+        rawdata = csv_file.read()
+        result = chardet.detect(rawdata)
+        charenc = result['encoding']
+        decoded_file = rawdata.decode(charenc).splitlines()
+        reader = csv.DictReader(decoded_file)
+        with transaction.atomic():
+            # Delete all existing data from the Panels_bom table
+            Panels_bom.objects.all().delete()
+            for row in reader:
+                # Log the row data
+                logger.info(f'Processing row: {row}')
+                # Strip BOM from keys
+                row = {k.lstrip('\ufeff'): v for k, v in row.items()}
+                panel_id = Panels.objects.get(panel_id=row['panel_id']) if row['panel_id'] else None
+                material_id = Materials.objects.get(id=row['material_id']) if row['material_id'] else None
+                quantity = row['quantity']
+                panels_bom_data = {
+                    'panel_id': panel_id,
+                    'material_id': material_id,
+                    'quantity': quantity,
+                }
+                panels_bom = Panels_bom(**panels_bom_data)
+                panels_bom.save()
         return HttpResponse("CSV file uploaded and processed successfully.")
     else:
         # Handle the case for non-POST requests
@@ -263,3 +297,18 @@ def update_panel_position_and_size(request):
         return JsonResponse({'message': 'Panels updated successfully'}, status=200)
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
+    
+@csrf_exempt
+def update_casting_schedule(request):
+    if request.method == 'POST':
+        schedule_id = request.POST.get('scheduleId')
+        complete = request.POST.get('complete') == '1'
+        try:
+            schedule = Casting_schedule.objects.get(schedule_id=schedule_id)
+            schedule.complete = complete
+            schedule.save()
+            return JsonResponse({'status': 'success'})
+        except Casting_schedule.DoesNotExist:
+            return JsonResponse({'status': 'error', 'error': 'No schedule found with the given id'}, status=404)
+    else:
+        return JsonResponse({'status': 'error', 'error': 'Invalid request method'}, status=405)

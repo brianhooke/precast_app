@@ -1335,3 +1335,434 @@ Watching for file changes with StatReloader
 Watching for file changes with StatReloader
 Watching for file changes with StatReloader
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/admin.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Internal Server Error: /update-panel-position-and-size/
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 259, in update_panel_position_and_size
+    panel.panel_rotation = panel_data['panel_rotation']
+                           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'panel_rotation'
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Internal Server Error: /update-panel-position-and-size/
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/backends/utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.NotNullViolation: null value in column "panel_rotation" of relation "homepage_panels" violates not-null constraint
+DETAIL:  Failing row contains (11, 2000.00, 5500.00, null, 182.48, 94.51, 4.00).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 260, in update_panel_position_and_size
+    panel.save()
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/base.py", line 814, in save
+    self.save_base(
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/base.py", line 877, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/base.py", line 990, in _save_table
+    updated = self._do_update(
+              ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/base.py", line 1054, in _do_update
+    return filtered._update(values) > 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/query.py", line 1231, in _update
+    return query.get_compiler(self.db).execute_sql(CURSOR)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1984, in execute_sql
+    cursor = super().execute_sql(result_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/backends/utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/backends/utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/backends/utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/backends/utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/backends/utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: null value in column "panel_rotation" of relation "homepage_panels" violates not-null constraint
+DETAIL:  Failing row contains (11, 2000.00, 5500.00, null, 182.48, 94.51, 4.00).
+
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Internal Server Error: /update-panel-position-and-size/
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 257, in update_panel_position_and_size
+    panel.panel_position_x = panel_data['panel_position_x']
+                             ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'panel_position_x'
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Internal Server Error: /update-panel-position-and-size/
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 257, in update_panel_position_and_size
+    panel.panel_position_x = panel_data['panel_position_x']
+                             ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'panel_position_x'
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/admin.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Internal Server Error: /
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/query.py", line 2150, in add_fields
+    join_info = self.setup_joins(
+                ^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/query.py", line 1812, in setup_joins
+    path, final_field, targets, rest = self.names_to_path(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'panel_id_id' into field. Choices are: complete, panels, schedule_date, schedule_id
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 65, in home
+    casting_schedule = Casting_schedule.objects.all().values('schedule_id', 'schedule_date', 'panel_id_id')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/query.py", line 1313, in values
+    clone = self._values(*fields, **expressions)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/query.py", line 1308, in _values
+    clone.query.set_values(fields)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/query.py", line 2449, in set_values
+    self.add_fields(field_names, True)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/query.py", line 2183, in add_fields
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'panel_id_id' into field. Choices are: complete, panels, schedule_date, schedule_id
+Not Found: /favicon.ico
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /update_casting_schedule/
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/admin.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/admin.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/admin.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/admin.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/urls.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/urls.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/urls.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+about to start panels_bom_upload
+Processing row: {'material_id': '286', 'panel_id': '92', 'quantity': ' 1.00000 '}
+Internal Server Error: /panels_bom_upload/
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 158, in panels_bom_upload
+    panel_id = Panels.objects.get(id=row['panel_id']) if row['panel_id'] else None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/query.py", line 623, in get
+    clone = self._chain() if self.query.combinator else self.filter(*args, **kwargs)
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/query.py", line 1436, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/query.py", line 1454, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/query.py", line 1461, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/query.py", line 1534, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/query.py", line 1565, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/query.py", line 1415, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/query.py", line 1225, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/sql/query.py", line 1713, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'id' into field. Choices are: panel_id, panel_length, panel_position_x, panel_position_y, panel_rotation, panel_volume, panel_width, panels_bom, schedule_id, schedule_id_id
+Not Found: /favicon.ico
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.
+Watching for file changes with StatReloader
+about to start panels_bom_upload
+Processing row: {'material_id': '286', 'panel_id': '92', 'quantity': ' 1.00000 '}
+Internal Server Error: /panels_bom_upload/
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 158, in panels_bom_upload
+    panel_id = Panels.objects.get(panel_id=row['panel_id']) if row['panel_id'] else None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/query.py", line 637, in get
+    raise self.model.DoesNotExist(
+homepage.models.Panels.DoesNotExist: Panels matching query does not exist.
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+about to start panels_bom_upload
+Processing row: {'material_id': '286', 'panel_id': '92', 'quantity': ' 1.00000 '}
+Internal Server Error: /panels_bom_upload/
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 158, in panels_bom_upload
+    panel_id = Panels.objects.get(panel_id=row['panel_id']) if row['panel_id'] else None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/query.py", line 637, in get
+    raise self.model.DoesNotExist(
+homepage.models.Panels.DoesNotExist: Panels matching query does not exist.
+Not Found: /favicon.ico
+Watching for file changes with StatReloader
+about to start panels_bom_upload
+Processing row: {'material_id': '286', 'panel_id': '92', 'quantity': ' 1.00000 '}
+Internal Server Error: /panels_bom_upload/
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 158, in panels_bom_upload
+    panel_id = Panels.objects.get(panel_id=row['panel_id']) if row['panel_id'] else None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/db/models/query.py", line 637, in get
+    raise self.model.DoesNotExist(
+homepage.models.Panels.DoesNotExist: Panels matching query does not exist.
+Not Found: /favicon.ico
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/models.py changed, reloading.
+Watching for file changes with StatReloader

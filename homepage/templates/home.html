@@ -13,7 +13,7 @@
     left: 10%;
     width: 90%;
     height: 100%;
-    background-image: url('{% static "images/mp.png" %}');
+    background-image: url('{% static "images/precast.png" %}');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -31,31 +31,50 @@
     "></div>
 </div>
 
-<div style="display: flex; justify-content: center; align-items: center;">
-    <h1 style="margin: 0px; color: white;">PRECAST APP HO</h1><img src="{% static 'logo.png' %}" alt="Your Image" style="width: 50px; height: 50px;"><h1 style="margin: 0px; color: white;">E PAGE</h1>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" id="uploadDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%); border: none; color: white;">
+            Upload
+        </button>
+        <div class="dropdown-menu" aria-labelledby="uploadDropdown">
+          <!-- CSV Upload Form for Materials -->
+          <form action="{% url 'materials_upload' %}" method="post" enctype="multipart/form-data" class="dropdown-item">
+              {% csrf_token %}
+              <input type="file" id="csv_file_materials" name="csv_file" accept=".csv" style="display: none;" onchange="console.log('Materials file input changed'); this.form.submit();">
+              <button type="button" onclick="console.log('Materials button clicked'); document.getElementById('csv_file_materials').click();">Upload CSV for Materials</button>
+          </form>
+      
+          <!-- CSV Upload Form for Bom -->
+          <form action="{% url 'bom_upload' %}" method="post" enctype="multipart/form-data" class="dropdown-item">
+              {% csrf_token %}
+              <input type="file" id="csv_file_bom" name="csv_file" accept=".csv" style="display: none;" onchange="console.log('BOM file input changed'); this.form.submit();">
+              <button type="button" onclick="console.log('BOM button clicked'); document.getElementById('csv_file_bom').click();">Upload CSV for Bom</button>
+          </form>
+      
+          <!-- Drawing Upload Form -->
+          <form method="post" enctype="multipart/form-data" class="dropdown-item">
+              {% csrf_token %}
+              <input type="file" id="pdfUpload" multiple name="{{ form.pdf_file.name }}" accept=".pdf" style="display: none;" onchange="console.log('Drawings file input changed');" />
+              <button id="uploadButton" type="button" onclick="console.log('Drawings button clicked'); document.getElementById('pdfUpload').click();">Upload Drawings</button>
+          </form>
+
+          <!-- PanelsBOM Upload Form -->
+          <form action="{% url 'panels_bom_upload' %}" method="post" enctype="multipart/form-data" class="dropdown-item">
+            {% csrf_token %}
+            <input type="file" id="csv_file_panelsBom" name="csv_file" accept=".csv" style="display: none;" onchange="console.log('Panels BOM file input changed'); this.form.submit();">
+            <button type="button" onclick="console.log('Panels BOM button clicked'); document.getElementById('csv_file_panelsBom').click();">Upload CSV for Panels BOM</button>
+        </form>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: center; flex-grow: 1;">
+        <h1 style="margin: 0px; color: white;">PRECAST APP HO</h1>
+        <img src="{% static 'logo.png' %}" alt="Your Image" style="width: 50px; height: 50px;">
+        <h1 style="margin: 0px; color: white;">E PAGE</h1>
+    </div>
 </div>
 <p style="text-align:center; color: white;" >5/43 Accolade Avenue</p>
 
-<!-- CSV Upload Form for Materials -->
-<form action="{% url 'materials_upload' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" id="csv_file_materials" name="csv_file" accept=".csv" style="display: none;" onchange="console.log('Materials file input changed'); this.form.submit();">
-    <button type="button" onclick="console.log('Materials button clicked'); document.getElementById('csv_file_materials').click();">Upload CSV for Materials</button>
-</form>
-
-<!-- CSV Upload Form for Bom -->
-<form action="{% url 'bom_upload' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" id="csv_file_bom" name="csv_file" accept=".csv" style="display: none;" onchange="console.log('BOM file input changed'); this.form.submit();">
-    <button type="button" onclick="console.log('BOM button clicked'); document.getElementById('csv_file_bom').click();">Upload CSV for Bom</button>
-</form>
-
-<!-- Drawing Upload Form -->
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" id="pdfUpload" multiple name="{{ form.pdf_file.name }}" accept=".pdf" style="display: none;" onchange="console.log('Drawings file input changed');" />
-    <button id="uploadButton" type="button" onclick="console.log('Drawings button clicked'); document.getElementById('pdfUpload').click();">Upload Drawings</button>
-</form>
 
 {{ suppliers|json_script:"suppliers" }}
 {{ materials|json_script:"materials" }}
