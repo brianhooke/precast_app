@@ -192,10 +192,10 @@ function showPendingOrders() {
                             modalHtml += `
                             <tr>
                                 <td>
-                                    <a href="#" onclick="existingOrder(${order.order_id});">${order.supplier_id__name}</a>
+                                    <a href="#" onclick="existingOrder(${order.order_id}); $('#pendingOrders').modal('hide');">${order.supplier_id__name}</a>
                                 </td>
                                 <td data-order-id="${order.order_id}">
-                                    <a href="#" onclick="existingOrder(${order.order_id});">${formattedDate}</a>
+                                    <a href="#" onclick="existingOrder(${order.order_id}); $('#pendingOrders').modal('hide');">${formattedDate}</a>
                                 </td>
                             </tr>`;
                         }
@@ -300,7 +300,6 @@ function upload_order() {
         var inputVal = cells.eq(8).find('input').val();
         var orderQty = !isNaN(inputVal) && inputVal !== '' ? Number(inputVal) : 0; // Convert orderQty to a number only if it's a number
         var rate = Number(cells.eq(3).text().replace(/[^0-9.-]+/g,"")); // Get the rate from the fourth cell and parse it to a number
-        console.log('orderQty:', orderQty); // Log orderQty
         // If supplier_id equals "openingStock", push all rows' material_id's and orderQty (even if orderQty is 0)
         if (supplier_id === "openingStock") {
             data.push({
@@ -316,7 +315,6 @@ function upload_order() {
             });
         }
     });
-    console.log('Data to be sent:', data); // Log data to be sent
     var order_status = 1; //1 is for pending orders
     var url, body;
     if (supplier_id === "openingStock") {
@@ -348,24 +346,19 @@ function upload_order() {
         return response.json();
     })
     .then(data => {
-        console.log('Success:', data);
         alert('Success: Order Successfully Saved.');
         location.reload();
     })
     .catch((error) => {
-        console.error('Error:', error);
         alert('Error: There was a problem sending the data.');
     });
 }
 
 function existingOrder(order_id) {
-    console.log('Order ID:', order_id);
     var matchingOrder = orders.find(order => order.order_id === order_id);
-    console.log('Matching Order:', matchingOrder);
     var supplierName = matchingOrder ? matchingOrder.supplier_id__name : '';
     var formattedDate = matchingOrder ? new Date(matchingOrder.datestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }) : '';
     var matchingOrdersData = orders_data.filter(orderData => orderData.order_id_id === order_id);
-    console.log('Matching Orders Data:', matchingOrdersData);
     var modalHtml = `
     <div class="modal fade" id="existingOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="max-width: 800px;">
@@ -389,7 +382,6 @@ function existingOrder(order_id) {
                         var totalCost = 0;
                         for (let orderData of matchingOrdersData) {
                             let matchingMaterial = materials.find(material => material.material_id === orderData.material_id_id);
-                            console.log('Matching Material:', matchingMaterial);
                             if (matchingMaterial) {
                                 modalHtml += `
                                     <tr data-supplier-id="${matchingMaterial.supplier_id}" data-material-id="${matchingMaterial.material_id}">
@@ -413,11 +405,14 @@ function existingOrder(order_id) {
                         </tbody>
                     </table>
                     <div class="modal-footer">
-                        <div class="col-6 text-left">
+                        <div class="col-4 text-left">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="col-6 text-right">
-                            <button type="button" class="btn btn-primary update-completed-values" id="receiveOrderBtn">Order Received</button>
+                        <div class="col-4 text-center">
+                            <button type="button" class="btn btn-primary update-completed-values" id="useOrderBtn">Received --> Use </button>
+                        </div>
+                        <div class="col-4 text-right">
+                            <button type="button" class="btn btn-primary update-completed-values" id="stockOrderBtn">Received --> Shelf </button>
                         </div>
                     </div>
                 </div>
@@ -430,16 +425,21 @@ function existingOrder(order_id) {
     document.body.appendChild(modalElement);
     $('#existingOrderModal').modal('show');
     // Add an event listener to the dropdown box
-    // Add an event listener to the dropdown box
-    document.getElementById('receiveOrderBtn').addEventListener('click', function() {
+    document.getElementById('stockOrderBtn').addEventListener('click', function() {
         receive_order(order_id);
-    });    // Remove the modal from the document when it's closed
+        $('#existingOrderModal').modal('hide');
+    });    
+    document.getElementById('useOrderBtn').addEventListener('click', function() {
+        allocateOrderModal(order_id, supplierName);
+        $('#existingOrderModal').modal('hide');        
+    });        
+    // Remove the modal from the document when it's closed
     $('#existingOrderModal').on('hidden.bs.modal', function (e) {
         $('#existingOrderModal').remove();
     });
 }
 
-function receive_order(order_id) {
+function receive_order(order_id) { // Function to receive & stock an order
     var data = [];
     var rows = document.querySelectorAll('#existingOrderModal tbody tr');
     rows.forEach(function(row) {
@@ -455,7 +455,6 @@ function receive_order(order_id) {
             'rate': rate
         });
     });
-    console.log(data);  // Log the data array
     fetch('/receive_order/', {
         method: 'POST',
         headers: {
@@ -465,13 +464,124 @@ function receive_order(order_id) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
         alert('Success: Order Successfully Received.');
         location.reload();
     })
     .catch((error) => {
         console.error('Error:', error);
     });
+}
+
+function allocateOrderModal(order_id, supplierName) {
+    console.log('allocateOrderModal called with order_id:', order_id);
+    let uniqueDates = [];
+    let maxPanelCount = 0;
+    let dateToIdMap = {}; // Map to store schedule_date to schedule_id mapping
+    console.log('Initial variables set');
+    for (let schedule of casting_schedule) {
+        console.log('Processing schedule:', schedule);
+        if (!uniqueDates.includes(schedule.schedule_date)) {
+            uniqueDates.push(schedule.schedule_date);
+            dateToIdMap[schedule.schedule_date] = schedule.schedule_id; // Store schedule_date to schedule_id mapping
+            scheduleDates.push(schedule.schedule_id); // Add schedule_id to global array
+        }
+        let panelCount = panels.filter(panel => panel.schedule_id_id === schedule.schedule_id).length;
+        if (panelCount > maxPanelCount) {
+            maxPanelCount = panelCount;
+        }
+    }
+    console.log('Finished processing schedules');
+    scheduleDates.sort((a, b) => new Date(casting_schedule.find(schedule => schedule.schedule_id === a).schedule_date) - new Date(casting_schedule.find(schedule => schedule.schedule_id === b).schedule_date));
+    uniqueDates.sort((a, b) => new Date(a) - new Date(b));
+    console.log('Sorted dates');
+    var modalHtml = `
+    <div class="modal fade" id="allocateOrders" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="max-width: 600px;">
+            <div class="modal-content" style="border: 3px solid black; overflow-x: auto; overflow-y: auto;">
+                <div class="modal-header" style="text-align: center; background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%); position: sticky; top: 0">
+                    <h5 class="modal-title">Allocate ${supplierName} Order to Schedule(s)</h5>
+                </div>           
+                    <table>
+                        <tr>
+                            <th style="position: sticky; top: 40px;">Date</th>
+                            <th style="position: sticky; top: 40px;">m3</th>`;
+    console.log('Started building modal HTML');
+    for (let i = 1; i <= maxPanelCount; i++) {
+        modalHtml += `<th style="position: sticky; top: 40px;">Panel ${i}</th>`;
+        console.log(`Added header for panel ${i}`);
+    }
+    modalHtml += `<th style="position: sticky; top: 40px;">Allocate</th></tr>`;
+    console.log('Added Complete header');
+    for (let i = 0; i < uniqueDates.length; i++) {
+        let date = uniqueDates[i];
+        let formattedDate = new Date(date);
+        let display_date = formattedDate.getDate() + '-' + formattedDate.toLocaleString('default', { month: 'short' }) + '-' + formattedDate.getFullYear().toString().substr(-2);
+        console.log(`Processing date: ${display_date}`);
+        let totalVolume = panels.filter(panel => panel.schedule_id_id === dateToIdMap[date]).reduce((sum, panel) => {
+            return sum + +panel.panel_volume;
+        }, 0).toFixed(2);
+        let scheduleId = dateToIdMap[date];
+        let checkbox = `<input type="checkbox" class="scheduled-checkboxes" data-schedule-id="${scheduleId}" data-display-date="${display_date}">`;
+        let rowColor = i % 2 === 0 ? 'white' : 'lightgrey'; // Change color based on row index
+        modalHtml += `
+        <tr style="background-color: ${rowColor}; background: white;">
+            <td id="${scheduleId}">${display_date}</td>
+            <td><b>${totalVolume}</b></td>`;
+        let panelIds = panels.filter(panel => panel.schedule_id_id === dateToIdMap[date]).map(panel => panel.panel_id);
+        for (let i = 0; i < maxPanelCount; i++) {
+            modalHtml += `<td>${panelIds[i] || ''}</td>`;
+        }
+        modalHtml += `<td style="text-align: center; vertical-align: middle;">${checkbox}</td></tr>`;
+    }
+    modalHtml += `
+                    </table>
+                        <div class="modal-footer">
+                        <div class="col-6 text-left">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        <div class="col-6 text-right">
+                            <button type="button" class="btn btn-primary update-completed-values" id="scheduleAllocateBtn">Allocate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+// Set its innerHTML to the table HTML
+var modalElement = document.createElement('div');
+modalElement.innerHTML = modalHtml;
+document.body.appendChild(modalElement);
+console.log("about to show modal");
+$('#allocateOrders').modal('show');
+$('#scheduleAllocateBtn').on('click', function() {
+    // Retrieve the list of scheduleIds whose checkbox is ticked
+    let checkedScheduleIds = [];
+    $('.scheduled-checkboxes:checked').each(function() {
+        checkedScheduleIds.push($(this).data('schedule-id'));
+    });
+    console.log("Checked schedule ids:", checkedScheduleIds);
+    // Check if any checkboxes are checked
+    if (checkedScheduleIds.length === 0) {
+        alert('No schedules have been ticked');
+        return;
+    }
+    // Pass the list and order_id to a POST function 'allocate_order'
+    $.ajax({
+        url: '/allocate_order/',  // Replace with your actual URL
+        type: 'POST',
+        data: {
+            schedule_ids: checkedScheduleIds,
+            order_id: order_id  // Replace with your actual order_id
+        },
+        success: function() {
+            alert('Order successfully allocated');
+            location.reload();
+        },
+        error: function() {
+            alert('An error occurred');
+        }
+    });
+});
 }
 
 function showPastOrders() {
@@ -489,7 +599,7 @@ function showPastOrders() {
                         <th>Date</th>
                     </tr>`;
                     for (let order of orders) {
-                        if (order.order_status === '2') {
+                        if (order.order_status !== '1') {
                             let date = new Date(order.datestamp);
                             let formattedDate = date.getDate() + '-' + date.toLocaleString('default', { month: 'short' }) + '-' + date.getFullYear();
                             modalHtml += `
@@ -512,7 +622,6 @@ function showPastOrders() {
                     </div>
                 </div>
             </div>
-        </div>
     </div>
   `;
     var modalElement = document.createElement('div');
@@ -527,7 +636,6 @@ function pastOrder(order_id) {
     var supplierName = matchingOrder ? matchingOrder.supplier_id__name : '';
     var formattedDate = matchingOrder ? new Date(matchingOrder.datestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }) : '';
     var matchingOrdersData = orders_data.filter(orderData => orderData.order_id_id === order_id);
-    console.log('Matching Orders Data:', matchingOrdersData);
     var modalHtml = `
     <div class="modal fade" id="pastOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="max-width: 800px;">
@@ -551,7 +659,6 @@ function pastOrder(order_id) {
                         var totalCost = 0;
                         for (let orderData of matchingOrdersData) {
                             let matchingMaterial = materials.find(material => material.material_id === orderData.material_id_id);
-                            console.log('Matching Material:', matchingMaterial);
                             if (matchingMaterial) {
                                 modalHtml += `
                                     <tr data-supplier-id="${matchingMaterial.supplier_id}" data-material-id="${matchingMaterial.material_id}">

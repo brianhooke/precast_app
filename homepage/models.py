@@ -57,7 +57,7 @@ class Orders(models.Model):
     order_id = models.AutoField(primary_key=True)
     datestamp = models.DateField(auto_now_add=True)
     supplier_id = models.ForeignKey(Suppliers, on_delete=models.SET_NULL, null=True, blank=True)
-    order_status = models.CharField(max_length=100) #1 for pending, 2 for received
+    order_status = models.CharField(max_length=100) #1 for pending, 2 for received & stocked, 3 for used
     def __str__(self):
         return f'Order ID: {self.order_id}, Date: {self.datestamp}, Supplier: {self.supplier_id}, Status: {self.order_status}'
     
@@ -70,6 +70,14 @@ class Orders_data(models.Model):
         return f'Order ID: {self.order_id}, Material ID: {self.material_id}, Quantity: {self.quantity}, Rate: {self.rate}'
     class Meta:
         verbose_name_plural = "Order Data"
+
+class Orders_used(models.Model):
+    order_id = models.ForeignKey('Orders', on_delete=models.CASCADE)
+    schedule_id = models.ForeignKey('Casting_schedule', on_delete=models.CASCADE)
+    def __str__(self):
+        return f'Order ID: {self.order_id}, Schedule ID: {self.schedule_id}'
+    class Meta:
+        verbose_name_plural = "Orders Used"
     
 class Drawings(models.Model):
     pdf_file = models.FileField(upload_to='drawings/')

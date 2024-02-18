@@ -2,7 +2,7 @@
 function showBom(bom) {
     var modalHtml = `
     <div class="modal fade" id="bomModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document" style="max-width: 800px;">
+        <div class="modal-dialog" role="document" style="max-width: 600px;">
             <div class="modal-content" style="border: 3px solid black;">
                 <div class="modal-header" style="text-align: center; background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%);">
                     <h5 class="modal-title">Bill Of Materials</h5>

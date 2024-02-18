@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings, Orders, Orders_data, Panels, Casting_schedule, Panels_bom
-
+from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings, Orders, Orders_data, Panels, Casting_schedule, Panels_bom, Orders_used
 
 class SuppliersAdmin(admin.ModelAdmin):
     list_display = ("supplier_id", "name", "contact", "phone", "email", "webpage")
@@ -35,6 +34,9 @@ class Panels_bomAdmin(admin.ModelAdmin):
 class Casting_scheduleAdmin(admin.ModelAdmin):
     list_display = ('schedule_id', 'schedule_date', 'complete')
 
+class Orders_usedAdmin(admin.ModelAdmin):
+    list_display = ('order_id', 'schedule_id')
+
 admin.site.register(Suppliers, SuppliersAdmin)
 admin.site.register(Materials, MaterialsAdmin)
 admin.site.register(Bom, BomAdmin)
@@ -46,3 +48,4 @@ admin.site.register(Orders_data, Orders_dataAdmin)
 admin.site.register(Panels, Panels_dataAdmin)
 admin.site.register(Casting_schedule, Casting_scheduleAdmin)
 admin.site.register(Panels_bom, Panels_bomAdmin)  
+admin.site.register(Orders_used, Orders_usedAdmin)

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.db import transaction
-from django.db.models import Sum
+from django.db.models import Sum, F, Case, When, IntegerField, Q
 from django.http import HttpResponse
-from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings, Orders, Orders_data, Panels, Casting_schedule, Panels_bom
+from .models import Suppliers, Materials, Bom, Stocktake, Stocktake_data, Drawings, Orders, Orders_data, Panels, Casting_schedule, Panels_bom, Orders_used
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F
@@ -16,12 +16,113 @@ import io
 import chardet
 from .forms import DrawingUploadForm
 from decimal import Decimal
+from collections import defaultdict
 
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 handler = RotatingFileHandler('application.log', maxBytes=2000, backupCount=10)
 logger.addHandler(handler)
+
+
+
+def get_used_materials():
+    # Fetch all Orders_used objects
+    orders_used = Orders_used.objects.all()
+    # Get unique order_ids
+    unique_order_ids = set(order.order_id_id for order in orders_used)
+    # For each unique order_id, get all related schedule_ids
+    order_schedule_mapping = {}
+    for order_id in unique_order_ids:
+        related_schedule_ids = [order.schedule_id_id for order in orders_used if order.order_id_id == order_id]
+        order_schedule_mapping[order_id] = related_schedule_ids
+    # Create orders_bom_calculated dataset
+    orders_bom_calculated = {}
+    for order_id, schedule_ids in order_schedule_mapping.items():
+        orders_data = Orders_data.objects.filter(order_id=order_id)
+        orders_bom_calculated[order_id] = []
+        for order_data in orders_data:
+            material_id = order_data.material_id_id
+            quantity = order_data.quantity
+            orders_bom_calculated[order_id].append({
+                'material_id': material_id,
+                'quantity': quantity
+            })
+    # Create panels_bom_calculated dataset
+    panels_bom_calculated = {}
+    for order_id, schedule_ids in order_schedule_mapping.items():
+        panels = Panels.objects.filter(schedule_id__in=schedule_ids)
+        panels_bom_calculated[order_id] = []
+        for panel in panels:
+            panel_id = panel.panel_id
+            panels_bom = Panels_bom.objects.filter(panel_id=panel_id)
+            for panel_bom in panels_bom:
+                material_id = panel_bom.material_id_id
+                quantity = panel_bom.quantity
+                panels_bom_calculated[order_id].append({
+                    'panel_id': panel_id,
+                    'material_id': material_id,
+                    'quantity': quantity
+                })
+    # Create used_materials dataset
+    used_materials = []
+    for order_id in unique_order_ids:
+        for order_bom in orders_bom_calculated[order_id]:
+            material_id = order_bom['material_id']
+            quantity_order = order_bom['quantity']
+            quantity_panel = sum(panel_bom['quantity'] for panel_bom in panels_bom_calculated[order_id] if panel_bom['material_id'] == material_id)
+            y = quantity_order / quantity_panel if quantity_panel != 0 else 0
+            for panel_bom in panels_bom_calculated[order_id]:
+                if panel_bom['material_id'] == material_id:
+                    used_quantity = panel_bom['quantity'] * y
+                    material = Materials.objects.get(material_id=material_id).material
+                    used_materials.append({
+                        'panel_id': panel_bom['panel_id'],
+                        'material_id': material_id,
+                        'material': material,
+                        'used_quantity': used_quantity
+                    })
+    logger.info(f'Used Materials: {used_materials}')
+    return used_materials
+
+def get_expected_used_materials():
+    used_materials = get_used_materials()
+    expected_used_materials = []
+    unique_materials = set((material['panel_id'], material['material_id']) for material in used_materials)
+    for panel_id, material_id in unique_materials:
+        material = Materials.objects.get(material_id=material_id).material
+        expected_quantity = Panels_bom.objects.get(panel_id=panel_id, material_id=material_id).quantity
+        expected_used_materials.append({
+            'panel_id': panel_id,
+            'material_id': material_id,
+            'material': material,
+            'expected_quantity': expected_quantity
+        })
+    logger.info(f'Expected Materials: {expected_used_materials}')
+    return expected_used_materials
+
+def metric_calculations():
+    # Get the data from the other functions
+    used_materials = get_used_materials()
+    expected_used_materials = get_expected_used_materials()
+    # Create a dictionary for easy lookup of quantities by material_id
+    used_quantities = {material['material_id']: material['used_quantity'] for material in used_materials}
+    expected_quantities = {material['material_id']: material['expected_quantity'] for material in expected_used_materials}
+    # Get all Materials
+    all_materials = Materials.objects.all()
+    # Calculate panel_consumables_pl for each material
+    panel_consumables_pl = []
+    for material in all_materials:
+        material_id = material.material_id
+        rate = material.rate
+        used_quantity = used_quantities.get(material_id, 0)
+        expected_quantity = expected_quantities.get(material_id, 0)
+        material_pl = (used_quantity - expected_quantity) * rate
+        panel_consumables_pl.append({
+            'material_id': material_id,
+            'material_pl': material_pl
+        })
+    return panel_consumables_pl
 
 # Create your views here.
 def home(request):
@@ -63,7 +164,35 @@ def home(request):
     drawings_data = [{'id': drawing.id, 'pdf_file': drawing.pdf_file.url} for drawing in drawings]    # logger.info('Suppliers: %s', list(suppliers))
     panels = Panels.objects.all().values('panel_id', 'panel_width', 'panel_length', 'panel_volume', 'panel_position_x', 'panel_position_y', 'panel_rotation', 'schedule_id_id')
     casting_schedule = Casting_schedule.objects.all().values()
-    return render(request, 'home.html', {'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data, 'stocktake': stocktake, 'stocktake_data': stocktake_data, 'shelf_stock': shelf_stock, 'orders': list(orders), 'orders_data': list(orders_data), 'panels': list(panels), 'casting_schedule': list(casting_schedule)})
+    # Fetch Panels_bom objects and annotate them
+    panels_bom = Panels_bom.objects.all().annotate(
+        material=F('material_id__material'),
+        expected_wastage=F('material_id__expected_wastage'),
+        cast_qty=Sum(
+            Case(
+                When(panel_id__schedule_id__complete=True, then='quantity'),
+                default=0,
+                output_field=IntegerField(),
+            )
+        )
+    ).values('material_id', 'material', 'expected_wastage', 'quantity', 'panel_id', 'cast_qty')
+    # Initialize a dictionary to store the grouped data
+    bom_tracking_dict = defaultdict(lambda: {'tender_qty': 0, 'cast_qty': 0})
+    # Iterate over the Panels_bom objects and group them by material_id
+    for item in panels_bom:
+        material_id = item['material_id']
+        bom_tracking_dict[material_id]['material'] = item['material']
+        bom_tracking_dict[material_id]['tender_qty'] += item['quantity'] * (1 + item['expected_wastage'])
+        bom_tracking_dict[material_id]['cast_qty'] += item['cast_qty']
+    # Convert the dictionary to a list
+    bom_tracking = list(bom_tracking_dict.values())
+    used_materials = get_used_materials()
+    expected_used_materials = get_expected_used_materials()
+    panel_consumables_pl = metric_calculations()
+    return render(request, 'home.html', {'used_materials': used_materials, 'expected_used_materials': expected_used_materials, 'panel_consumables_pl': panel_consumables_pl, 'bom_tracking': bom_tracking, 'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data, 'stocktake': stocktake, 'stocktake_data': stocktake_data, 'shelf_stock': shelf_stock, 'orders': list(orders), 'orders_data': list(orders_data), 'panels': list(panels), 'casting_schedule': list(casting_schedule)})
+
+
+
 
 @csrf_exempt
 def update_suppliers(request):
@@ -156,8 +285,12 @@ def panels_bom_upload(request):
                 # Strip BOM from keys
                 row = {k.lstrip('\ufeff'): v for k, v in row.items()}
                 panel_id = Panels.objects.get(panel_id=row['panel_id']) if row['panel_id'] else None
-                material_id = Materials.objects.get(id=row['material_id']) if row['material_id'] else None
-                quantity = row['quantity']
+                material_id = Materials.objects.get(material_id=row['material_id']) if row['material_id'] else None
+                quantity = row['quantity'].strip()
+                if quantity == '-':
+                    quantity = 0
+                else:
+                    quantity = Decimal(quantity)
                 panels_bom_data = {
                     'panel_id': panel_id,
                     'material_id': material_id,
@@ -312,3 +445,20 @@ def update_casting_schedule(request):
             return JsonResponse({'status': 'error', 'error': 'No schedule found with the given id'}, status=404)
     else:
         return JsonResponse({'status': 'error', 'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def allocate_order(request):
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        schedule_ids = request.POST.getlist('schedule_ids[]')
+        # Retrieve the Orders object with the given order_id
+        order = Orders.objects.get(pk=order_id)
+        # Update the order_status
+        order.order_status = '3'
+        order.save()
+        for schedule_id in schedule_ids:
+            schedule = Casting_schedule.objects.get(pk=schedule_id)
+            Orders_used.objects.create(order_id=order, schedule_id=schedule)
+        return JsonResponse({'message': 'Order successfully allocated'}, status=200)
+    else:
+        return JsonResponse({'error': 'Invalid request'}, status=400)

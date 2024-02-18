@@ -75,6 +75,20 @@
 </div>
 <p style="text-align:center; color: white;" >5/43 Accolade Avenue</p>
 
+<div style="display: flex; flex-wrap: wrap; height: calc(100vh - 160px);">
+    <div id="first-quadrant" style="flex: 50%; height: 50%; border: 1px solid #ccc; box-sizing: border-box;">
+        <div style="padding: 10px; overflow: auto; height: calc(100% - 20px);"></div>
+    </div>
+    <div id="second-quadrant" style="flex: 50%; height: 50%; border: 1px solid #ccc; box-sizing: border-box;">
+        <div style="padding: 10px; overflow: auto; height: calc(100% - 20px);"></div>
+    </div>
+    <div id="third-quadrant" style="flex: 50%; height: 50%; border: 1px solid #ccc; box-sizing: border-box;">
+        <div style="padding: 10px; overflow: auto; height: calc(100% - 20px);"></div>
+    </div>
+    <div id="fourth-quadrant" style="flex: 50%; height: 50%; border: 1px solid #ccc; box-sizing: border-box;">
+        <div style="padding: 10px; overflow: auto; height: calc(100% - 20px);"></div>
+    </div>
+</div>
 
 {{ suppliers|json_script:"suppliers" }}
 {{ materials|json_script:"materials" }}
@@ -87,9 +101,19 @@
 {{ orders_data|json_script:"orders_data" }}
 {{ panels|json_script:"panels" }}
 {{ casting_schedule|json_script:"casting_schedule" }}
+{{ bom_tracking|json_script:"bom_tracking" }}
+{{ used_materials|json_script:"used_materials" }}
+{{ expected_used_materials|json_script:"expected_used_materials" }}
+
+
+<script src="{% static 'js/dash_metrics.js' %}"></script>
+<script src="{% static 'js/dash_tracking.js' %}"></script>
+<script src="{% static 'js/dash_schedule.js' %}"></script>
 
 
 <script> 
+console.log("expected_used_materials", expected_used_materials);
+console.log("end of used materials");
 // CSV Upload Script for Materials
 document.getElementById('csv_file_materials').addEventListener('change', function(event) {
     console.log('event:', event);

@@ -76,11 +76,10 @@ function castingScheduleModal() {
   $(document).on('click', '.complete-checkbox', function() {
     let scheduleId = $(this).data('schedule-id');
     let display_date = $(this).data('display-date');
-    let confirmation = confirm(`You are about to mark the "${display_date}" Panels as cast. This is irreversible.`);
+    let confirmation = confirm(`You are about to mark the "${display_date}" panels as cast. This is irreversible.`);
     if (confirmation) {
         $.post('/update_casting_schedule/', { scheduleId: scheduleId, complete: 1 })
             .done(function() {
-                alert('The panels have been marked as cast.');
                 location.reload();
             })
             .fail(function() {
