@@ -650,7 +650,6 @@ function pastOrder(order_id) {
                             <tr>
                                 <th>Material</th>
                                 <th>Units</th>
-                                <th>$/Unit</th>
                                 <th>Pack Size</th>
                                 <th style="width: 25%;">Qty</th>
                             </tr>
@@ -663,22 +662,14 @@ function pastOrder(order_id) {
                                 modalHtml += `
                                     <tr data-supplier-id="${matchingMaterial.supplier_id}" data-material-id="${matchingMaterial.material_id}">
                                         <td>${matchingMaterial.material}</td>
-                                        <td>${matchingMaterial.units}</td>
                                         <td style="width: 25%;">${orderData.rate}</td>
                                         <td>${Math.round(matchingMaterial.supplier_increments)}</td>
-                                        <td style="width: 25%;">${orderData.quantity}</td>
+                                        <td style="width: 25%;">${parseFloat(orderData.quantity).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2})}</td>
                                     </tr>`;
                                 totalCost += orderData.rate * orderData.quantity;  // Calculate the cost of the item and add it to the total cost
                             }
                         }
                         modalHtml += `
-                                <tr>
-                                <td>Total</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>$${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                            </tr>
                         </tbody>
                     </table>
                     <div class="modal-footer">

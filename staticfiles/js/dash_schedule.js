@@ -15,22 +15,43 @@ function dashSchedule() {
     }
     scheduleDates.sort((a, b) => new Date(casting_schedule.find(schedule => schedule.schedule_id === a).schedule_date) - new Date(casting_schedule.find(schedule => schedule.schedule_id === b).schedule_date));
     uniqueDates.sort((a, b) => new Date(a) - new Date(b));
-    
     var tableHtml = `
     <div style="overflow-x: auto; opacity: 0.85; height: 300px; overflow-y: auto;">
-        <div style="text-align: center; background: linear-gradient(45deg, #A090D0, #B3E1DD); padding: 5px; position: sticky; top: 0;">
-            <h6 style="margin: 0; font-size: 0.8em;">Schedule</h6>
+        <div style="text-align: center; background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%); padding: 10px; position: sticky; top: 0;">
+            <h6 style="margin: 0;">Schedule</h6>
         </div>
-        <table style="font-size: 0.8em;">
-            <tr>
-                <th style="position: sticky; top: 20px; font-size: 0.8em; padding: 2px;">Date</th>
-                <th style="position: sticky; top: 20px; font-size: 0.8em; padding: 2px;">m3</th>`;
+        <table>
+            <tr style="background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%);">
+                <th style="position: sticky; top: 40px;">Date</th>
+                <th style="position: sticky; top: 40px;">m3</th>`;
     for (let i = 1; i <= maxPanelCount; i++) {
-        tableHtml += `<th style="position: sticky; top: 20px; font-size: 0.8em; padding: 2px;">Panel ${i}</th>`;
+        tableHtml += `<th style="position: sticky; top: 40px;">Panel ${i}</th>`;
     }
-    tableHtml += `<th style="position: sticky; top: 20px; font-size: 0.8em; padding: 2px;">Complete</th></tr>
-                    </table>
-                </div>`;
+    tableHtml += `<th style="position: sticky; top: 40px;">Complete</th></tr>`;
+    for (let i = 0; i < uniqueDates.length; i++) {
+        let date = uniqueDates[i];
+        let formattedDate = new Date(date);
+        let display_date = formattedDate.getDate() + '-' + formattedDate.toLocaleString('default', { month: 'short' }) + '-' + formattedDate.getFullYear().toString().substr(-2);
+        let totalVolume = panels.filter(panel => panel.schedule_id_id === dateToIdMap[date]).reduce((sum, panel) => {
+            return sum + +panel.panel_volume;
+        }, 0).toFixed(2);
+        let scheduleId = dateToIdMap[date];
+        let schedule = casting_schedule.find(schedule => schedule.schedule_id === dateToIdMap[date]);
+        let checkboxOrTick = schedule.complete ? '<span style="color: green;">&#10003;</span>' : `<input type="checkbox" class="complete-checkbox" data-schedule-id="${scheduleId}" data-display-date="${display_date}">`;
+        let rowColor = i % 2 === 0 ? 'white' : 'lightgrey'; // Change color based on row index
+        tableHtml += `
+        <tr style="background-color: ${rowColor}; background: white;">
+            <td><a href="#" onclick="existingSchedule('${scheduleId}', '${display_date}')">${display_date}</a></td>
+            <td><b>${totalVolume}</b></td>`;
+        let panelIds = panels.filter(panel => panel.schedule_id_id === dateToIdMap[date]).map(panel => panel.panel_id);
+        for (let i = 0; i < maxPanelCount; i++) {
+            tableHtml += `<td>${panelIds[i] || ''}</td>`;
+        }
+        tableHtml += `<td style="text-align: center; vertical-align: middle;">${checkboxOrTick}</td></tr>`;
+    }
+    tableHtml += `
+        </table>
+    </div>`;
 // Select the second-quadrant div
 var secondQuadrant = document.querySelector('#second-quadrant > div');
 // Set its innerHTML to the table HTML

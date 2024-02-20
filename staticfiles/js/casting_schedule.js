@@ -28,7 +28,6 @@ function castingScheduleModal() {
                 <table>
                     <tr>
                         <th>Date</th>
-                        <th># Panels</th>
                         <th>m3</th>`;
     for (let i = 1; i <= maxPanelCount; i++) {
         modalHtml += `<th>Panel ${i}</th>`;
@@ -48,7 +47,6 @@ function castingScheduleModal() {
         <tr>
     
             <td><a href="#" onclick="existingSchedule('${scheduleId}', '${display_date}')">${display_date}</a></td>
-            <td>${panelCount}</td>
             <td><b>${totalVolume}</b></td>`;
         let panelIds = panels.filter(panel => panel.schedule_id_id === dateToIdMap[date]).map(panel => panel.panel_id);
         for (let i = 0; i < maxPanelCount; i++) {

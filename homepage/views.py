@@ -304,6 +304,52 @@ def panels_bom_upload(request):
         pass
 
 @csrf_exempt
+def panels_upload(request):
+    logger.info('about to start panels csv upload')
+    if request.method == 'POST':
+        if 'csv_file' not in request.FILES:
+            return HttpResponse("No CSV file uploaded.", status=400)
+        csv_file = request.FILES['csv_file']
+        rawdata = csv_file.read()
+        result = chardet.detect(rawdata)
+        charenc = result['encoding']
+        decoded_file = rawdata.decode(charenc).splitlines()
+        reader = csv.DictReader(decoded_file)
+        with transaction.atomic():
+            Panels.objects.all().delete()
+            for row in reader:
+                # Log the row data
+                logger.info(f'Processing row: {row}')
+                # Strip BOM from keys
+                row = {k.lstrip('\ufeff'): v for k, v in row.items()}
+                panel_id = int(row['panel_id'])
+                panel_width = Decimal(row['panel_width'])
+                panel_length = Decimal(row['panel_length'])
+                panel_volume = Decimal(row['panel_volume'])
+                panel_position_x = Decimal(row['panel_position_x'])
+                panel_position_y = Decimal(row['panel_position_y'])
+                panel_rotation = bool(row['panel_rotation'])
+                schedule_id = int(row['schedule_id']) if row['schedule_id'] else None
+                schedule = Casting_schedule.objects.get(pk=schedule_id) if schedule_id else None
+                panels_data = {
+                    'panel_id': panel_id,
+                    'panel_width': panel_width,
+                    'panel_length': panel_length,
+                    'panel_volume': panel_volume,
+                    'panel_position_x': panel_position_x,
+                    'panel_position_y': panel_position_y,
+                    'panel_rotation': panel_rotation,
+                    'schedule_id': schedule,  # Assign the Casting_schedule instance
+                }
+                panels = Panels(**panels_data)
+                panels.save()
+        return HttpResponse("CSV file uploaded and processed successfully.")
+    else:
+        # Handle the case for non-POST requests
+        pass
+
+
+@csrf_exempt
 def delete_supplier(request):
     logger = logging.getLogger(__name__)
     if request.method == 'POST':

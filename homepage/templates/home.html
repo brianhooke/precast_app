@@ -64,6 +64,13 @@
             <input type="file" id="csv_file_panelsBom" name="csv_file" accept=".csv" style="display: none;" onchange="console.log('Panels BOM file input changed'); this.form.submit();">
             <button type="button" onclick="console.log('Panels BOM button clicked'); document.getElementById('csv_file_panelsBom').click();">Upload CSV for Panels BOM</button>
         </form>
+
+        <form action="{% url 'panels_upload' %}" method="post" enctype="multipart/form-data" class="dropdown-item">
+            {% csrf_token %}
+            <input type="file" id="csv_file_panels" name="csv_file" accept=".csv" style="display: none;" onchange="console.log('Panels file input changed'); this.form.submit();">
+            <button type="button" onclick="console.log('Panels button clicked'); document.getElementById('csv_file_panels').click();">Upload CSV for Panels</button>
+        </form>
+
         </div>
       </div>
 
@@ -195,4 +202,5 @@ function uploadCSV(event, url) {
 
 
 {% endblock %}
+
 

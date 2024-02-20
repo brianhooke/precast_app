@@ -1,0 +1,25 @@
+Processing panel_bom with material_id N16 processed perimeter bar and quantity 0E-10
+Processing panel_bom with material_id N16 V bars and quantity 5.2800000000
+Processing panel_bom with material_id N12 perimeter bar and quantity 41.8000000000
+Processing panel_bom with material_id N12 600mm bar and quantity 22.8000000000
+Processing panel_bom with material_id SL92 mesh - 6.0 x 2.0 and quantity 13.0240000000
+Processing panel_bom with material_id SL82 mesh - 6.0 x 2.0 and quantity 0E-10
+Processing panel_bom with material_id SL92 mesh - cut to size and quantity 0E-10
+Processing panel_bom with material_id SL82 mesh - cut to size and quantity 0E-10
+Processing panel_bom with material_id Concrete and quantity 1.9536000000
+Processing order_id Order ID: 5, Date: 2024-02-16, Supplier: Holcim, Status: 3, schedule_id Schedule ID: 15, Date: 2024-02-21, Complete: False
+Found 1 orders_data for order_id Order ID: 5, Date: 2024-02-16, Supplier: Holcim, Status: 3
+Processing material_id 236 with quantity 4.50
+Found 2 panels for schedule_id Schedule ID: 15, Date: 2024-02-21, Complete: False
+Processing panel_id 88
+Found 44 panels_bom for panel_id 88
+Processing panel_bom with material_id Unexpected Line Items and quantity 1.0000000000
+Processing panel_bom with material_id Lanotec 20L and quantity 0.0100000000
+Processing panel_bom with material_id Sanding stone and quantity 0.0132000000
+Processing panel_bom with material_id Petrol and quantity 1.0000000000
+Processing panel_bom with material_id Gloves and quantity 0.4000000000
+Processing panel_bom with material_id Safety glasses and quantity 0.0520000000
+Processing panel_bom with material_id Tie Wire - Makita and quantity 0.8000000000
+Processing panel_bom with material_id Floor polishing pads and quantity 0.0332000000
+Processing panel_bom with material_id Chalk (blue) and quantity 0.0252000000
+Processing panel_bom with material_id Painters Sheet Plastic (25m rolls) and quantity 0.7600000000
