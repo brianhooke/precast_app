@@ -181,6 +181,7 @@ def home(request):
     # Iterate over the Panels_bom objects and group them by material_id
     for item in panels_bom:
         material_id = item['material_id']
+        bom_tracking_dict[material_id]['material_id'] = item['material_id']
         bom_tracking_dict[material_id]['material'] = item['material']
         bom_tracking_dict[material_id]['tender_qty'] += item['quantity'] * (1 + item['expected_wastage'])
         bom_tracking_dict[material_id]['cast_qty'] += item['cast_qty']

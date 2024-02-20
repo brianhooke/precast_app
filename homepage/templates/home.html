@@ -119,8 +119,6 @@
 
 
 <script> 
-console.log("expected_used_materials", expected_used_materials);
-console.log("end of used materials");
 // CSV Upload Script for Materials
 document.getElementById('csv_file_materials').addEventListener('change', function(event) {
     console.log('event:', event);
@@ -196,9 +194,6 @@ function uploadCSV(event, url) {
 <script>
     var bedLayoutImageUrl = "{% static 'images/bed_layout.png' %}";
 </script>
-
-
-
 
 
 {% endblock %}
