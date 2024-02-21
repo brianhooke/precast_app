@@ -1,0 +1,20 @@
+Watching for file changes with StatReloader
+Used Materials: [{'panel_id': 89, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('2.440000000000000000000000001')}, {'panel_id': 80, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('0.9150000000000000000000000003')}, {'panel_id': 28, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('2.745000000000000000000000001')}, {'panel_id': 87, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('2.603773584905660377358490565')}, {'panel_id': 35, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('3.169811320754716981132075471')}, {'panel_id': 34, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('3.169811320754716981132075471')}, {'panel_id': 29, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('3.056603773584905660377358490')}, {'panel_id': 32, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('1.754838709677419354838709677')}, {'panel_id': 86, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('1.445161290322580645161290322')}]
+Used Materials: [{'panel_id': 89, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('2.440000000000000000000000001')}, {'panel_id': 80, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('0.9150000000000000000000000003')}, {'panel_id': 28, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('2.745000000000000000000000001')}, {'panel_id': 87, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('2.603773584905660377358490565')}, {'panel_id': 35, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('3.169811320754716981132075471')}, {'panel_id': 34, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('3.169811320754716981132075471')}, {'panel_id': 29, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('3.056603773584905660377358490')}, {'panel_id': 32, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('1.754838709677419354838709677')}, {'panel_id': 86, 'material_id': 236, 'material': 'Concrete', 'used_quantity': Decimal('1.445161290322580645161290322')}]
+Internal Server Error: /
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 195, in home
+    expected_used_materials = get_expected_used_materials()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py", line 97, in get_expected_used_materials
+    tendered_quantity = expected_theoretical_quantity * (1 + expected_wastage)
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'
+Not Found: /favicon.ico
+/Users/brianhooke/Library/Mobile Documents/com~apple~CloudDocs/Coding/precast_app/precast_app/homepage/views.py changed, reloading.

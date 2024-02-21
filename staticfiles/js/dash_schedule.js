@@ -17,10 +17,10 @@ function dashSchedule() {
     uniqueDates.sort((a, b) => new Date(a) - new Date(b));
     var tableHtml = `
     <div style="overflow-x: auto; opacity: 0.85; height: 300px; overflow-y: auto;">
-        <div style="text-align: center; background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%); padding: 10px; position: sticky; top: 0;">
-            <h6 style="margin: 0;">Schedule</h6>
-        </div>
         <table>
+            <tr style="background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%);">
+                <th colspan="${maxPanelCount + 3}" class="sticky-header" style="position: sticky; top: 0; text-align: center;">Schedule</th>
+            </tr>
             <tr style="background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%);">
                 <th style="position: sticky; top: 40px;">Date</th>
                 <th style="position: sticky; top: 40px;">m3</th>`;
@@ -40,7 +40,7 @@ function dashSchedule() {
         let checkboxOrTick = schedule.complete ? '<span style="color: green;">&#10003;</span>' : `<input type="checkbox" class="complete-checkbox" data-schedule-id="${scheduleId}" data-display-date="${display_date}">`;
         let rowColor = i % 2 === 0 ? 'white' : 'lightgrey'; // Change color based on row index
         tableHtml += `
-        <tr style="background-color: ${rowColor}; background: white;">
+        <tr id="row-${i}" style="background-color: ${rowColor}; background: white;">
             <td><a href="#" onclick="existingSchedule('${scheduleId}', '${display_date}')">${display_date}</a></td>
             <td><b>${totalVolume}</b></td>`;
         let panelIds = panels.filter(panel => panel.schedule_id_id === dateToIdMap[date]).map(panel => panel.panel_id);
@@ -56,6 +56,16 @@ function dashSchedule() {
 var secondQuadrant = document.querySelector('#second-quadrant > div');
 // Set its innerHTML to the table HTML
 secondQuadrant.innerHTML = tableHtml;
+// Find the first row where complete=0
+let firstIncompleteRow = Array.from(document.querySelectorAll('tr')).find(row => row.querySelector('.complete-checkbox'));
+// Scroll to this row
+if (firstIncompleteRow) {
+    setTimeout(() => {
+        firstIncompleteRow.scrollIntoView();
+        // Adjust scroll position to keep "Schedule" heading visible
+        window.scrollBy(0, -document.querySelector('.sticky-header').offsetHeight);
+    }, 0);
+}
 $(document).on('click', '.complete-checkbox', function() {
     let scheduleId = $(this).data('schedule-id');
     let display_date = $(this).data('display-date');

@@ -90,13 +90,17 @@ def get_expected_used_materials():
     expected_used_materials = []
     unique_materials = set((material['panel_id'], material['material_id']) for material in used_materials)
     for panel_id, material_id in unique_materials:
-        material = Materials.objects.get(material_id=material_id).material
-        expected_quantity = Panels_bom.objects.get(panel_id=panel_id, material_id=material_id).quantity
+        material_obj = Materials.objects.get(material_id=material_id)
+        material = material_obj.material
+        expected_wastage = Decimal(material_obj.expected_wastage)
+        expected_theoretical_quantity = Panels_bom.objects.get(panel_id=panel_id, material_id=material_id).quantity
+        tendered_quantity = expected_theoretical_quantity * (1 + expected_wastage)
         expected_used_materials.append({
             'panel_id': panel_id,
             'material_id': material_id,
             'material': material,
-            'expected_quantity': expected_quantity
+            'expected_theoretical_quantity': expected_theoretical_quantity,
+            'tendered_quantity': tendered_quantity
         })
     logger.info(f'Expected Materials: {expected_used_materials}')
     return expected_used_materials
@@ -107,7 +111,7 @@ def metric_calculations():
     expected_used_materials = get_expected_used_materials()
     # Create a dictionary for easy lookup of quantities by material_id
     used_quantities = {material['material_id']: material['used_quantity'] for material in used_materials}
-    expected_quantities = {material['material_id']: material['expected_quantity'] for material in expected_used_materials}
+    expected_quantities = {material['material_id']: material['expected_theoretical_quantity'] for material in expected_used_materials}
     # Get all Materials
     all_materials = Materials.objects.all()
     # Calculate panel_consumables_pl for each material
@@ -123,6 +127,26 @@ def metric_calculations():
             'material_pl': material_pl
         })
     return panel_consumables_pl
+
+def materials_cast():
+    complete_schedules = Casting_schedule.objects.filter(complete=1)
+    panels = Panels.objects.filter(schedule_id__in=complete_schedules.values('schedule_id'))
+    
+    materials_cast = []
+    for panel in panels:
+        panel_boms = Panels_bom.objects.filter(panel_id=panel.panel_id)
+        for panel_bom in panel_boms:
+            material = Materials.objects.get(material_id=panel_bom.material_id_id)
+            expected_wastage = material.expected_wastage if material.expected_wastage is not None else 0
+            tendered_cast_qty = panel_bom.quantity * (1 + expected_wastage)
+            materials_cast.append({
+                'panel_id': panel.panel_id,
+                'material_id': material.material_id,
+                'theoretical_cast_qty': panel_bom.quantity,
+                'tendered_cast_qty': tendered_cast_qty
+            })
+    
+    return materials_cast
 
 # Create your views here.
 def home(request):
@@ -168,31 +192,21 @@ def home(request):
     panels_bom = Panels_bom.objects.all().annotate(
         material=F('material_id__material'),
         expected_wastage=F('material_id__expected_wastage'),
-        cast_qty=Sum(
-            Case(
-                When(panel_id__schedule_id__complete=True, then='quantity'),
-                default=0,
-                output_field=IntegerField(),
-            )
-        )
-    ).values('material_id', 'material', 'expected_wastage', 'quantity', 'panel_id', 'cast_qty')
+    ).values('material_id', 'material', 'expected_wastage', 'quantity', 'panel_id')
     # Initialize a dictionary to store the grouped data
-    bom_tracking_dict = defaultdict(lambda: {'tender_qty': 0, 'cast_qty': 0})
+    bom_tracking_dict = defaultdict(lambda: {'tender_qty': 0})
     # Iterate over the Panels_bom objects and group them by material_id
     for item in panels_bom:
         material_id = item['material_id']
         bom_tracking_dict[material_id]['material_id'] = item['material_id']
         bom_tracking_dict[material_id]['material'] = item['material']
         bom_tracking_dict[material_id]['tender_qty'] += item['quantity'] * (1 + item['expected_wastage'])
-        bom_tracking_dict[material_id]['cast_qty'] += item['cast_qty']
     # Convert the dictionary to a list
     bom_tracking = list(bom_tracking_dict.values())
     used_materials = get_used_materials()
     expected_used_materials = get_expected_used_materials()
     panel_consumables_pl = metric_calculations()
-    return render(request, 'home.html', {'used_materials': used_materials, 'expected_used_materials': expected_used_materials, 'panel_consumables_pl': panel_consumables_pl, 'bom_tracking': bom_tracking, 'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data, 'stocktake': stocktake, 'stocktake_data': stocktake_data, 'shelf_stock': shelf_stock, 'orders': list(orders), 'orders_data': list(orders_data), 'panels': list(panels), 'casting_schedule': list(casting_schedule)})
-
-
+    return render(request, 'home.html', {'materials_cast': materials_cast,  'used_materials': used_materials, 'expected_used_materials': expected_used_materials, 'panel_consumables_pl': panel_consumables_pl, 'bom_tracking': bom_tracking, 'suppliers': list(suppliers), 'materials': list(materials), 'bom': list(bom), 'drawings': drawings_data, 'stocktake': stocktake, 'stocktake_data': stocktake_data, 'shelf_stock': shelf_stock, 'orders': list(orders), 'orders_data': list(orders_data), 'panels': list(panels), 'casting_schedule': list(casting_schedule)})
 
 
 @csrf_exempt

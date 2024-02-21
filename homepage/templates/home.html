@@ -111,6 +111,9 @@
 {{ bom_tracking|json_script:"bom_tracking" }}
 {{ used_materials|json_script:"used_materials" }}
 {{ expected_used_materials|json_script:"expected_used_materials" }}
+{{ materials_cast|json_script:"materials_cast" }}
+
+
 
 
 <script src="{% static 'js/dash_metrics.js' %}"></script>
@@ -181,7 +184,8 @@ function uploadCSV(event, url) {
     var orders_data = JSON.parse(document.getElementById('orders_data').textContent);
     var panels = JSON.parse(document.getElementById('panels').textContent);
     var casting_schedule = JSON.parse(document.getElementById('casting_schedule').textContent);
-    // console.log('Orders Data:', orders_data);
+    var materials_cast = JSON.parse(document.getElementById('materials_cast').textContent);    
+    // console.log('Expected Used Materials:', expected_used_materials);
 </script>
 
 <script src="{% static 'js/suppliers.js' %}"></script>
