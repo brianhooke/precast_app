@@ -45,7 +45,7 @@ function dashBomTracking() {
                 // Calculate the sum of expected_materials.expected_theoretical_quantity for matching materials
                 for (let j = 0; j < expected_materials.length; j++) {
                     if (expected_materials[j].material === material.material) {
-                        expectedQuantity += Number(expected_materials[j].expected_theoretical_quantity);
+                        expectedQuantity += Number(expected_materials[j].tendered_quantity);
                     }
                 }
                 // Calculate the sum of expected_materials.expected_theoretical_quantity for matching materials

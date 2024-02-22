@@ -60,7 +60,9 @@ class Orders(models.Model):
     order_status = models.CharField(max_length=100) #1 for pending, 2 for received & stocked, 3 for used
     def __str__(self):
         return f'Order ID: {self.order_id}, Date: {self.datestamp}, Supplier: {self.supplier_id}, Status: {self.order_status}'
-    
+    class Meta:
+        verbose_name_plural = "Orders"
+
 class Orders_data(models.Model):
     order_id = models.ForeignKey(Orders, on_delete=models.CASCADE)
     material_id = models.ForeignKey(Materials, on_delete=models.CASCADE)
