@@ -37,8 +37,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
     'homepage',
 ]
+
+# AWS S3 Settings
+AWS_ACCESS_KEY_ID = 'AKIAZFAU42CDSLTRT7MP'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'precastappbucket'
+AWS_S3_CUSTOM_DOMAIN = f'precastappbucket.s3.amazonaws.com'
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+# s3 static settings
+AWS_STATIC_LOCATION = 'static'
+STATIC_URL = f'https://precastappbucket.s3.amazonaws.com/static/'
+# STATICFILES_STORAGE = 'precast_app.storage_backends.StaticStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# s3 public media settings
+AWS_PUBLIC_MEDIA_LOCATION = 'media/public'
+# DEFAULT_FILE_STORAGE = 'precast_app.storage_backends.PublicMediaStorage'
+DEFAULT_FILE_STORAGE = 'precast_app.storage_backends.MyS3Boto3Storage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -127,13 +144,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_temp')
 # save .js files into the project folder below... seems they load out of this one.
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'homepage/static'),]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
