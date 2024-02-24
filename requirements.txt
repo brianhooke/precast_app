@@ -8,3 +8,4 @@ psycopg2-binary
 dj-database-url
 chardet
 django-storages==1.14.2
+boto3
