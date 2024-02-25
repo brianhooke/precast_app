@@ -4,10 +4,9 @@ from .base import *
 
 DEBUG = False
 
-
 # AWS S3 Settings
-AWS_ACCESS_KEY_ID = 'AKIAZFAU42CDSLTRT7MP'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'precastappbucket'
 AWS_S3_CUSTOM_DOMAIN = f'precastappbucket.s3.amazonaws.com'
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
