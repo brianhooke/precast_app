@@ -82,7 +82,6 @@ def get_used_materials():
                         'material': material,
                         'used_quantity': used_quantity
                     })
-    logger.info(f'Used Materials: {used_materials}')
     return used_materials
 
 def get_expected_used_materials():

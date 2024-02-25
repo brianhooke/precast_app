@@ -22,9 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-aq#pc&7m8^*!rd_5%6qr_#kx-4hi_h$jb826u$*$7xv^wpyes6'
+# SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
 ALLOWED_HOSTS = ['herokuapp.com','*']
 
@@ -41,22 +43,7 @@ INSTALLED_APPS = [
     'homepage',
 ]
 
-# AWS S3 Settings
-AWS_ACCESS_KEY_ID = 'AKIAZFAU42CDSLTRT7MP'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'precastappbucket'
-AWS_S3_CUSTOM_DOMAIN = f'precastappbucket.s3.amazonaws.com'
-AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-# s3 static settings
-AWS_STATIC_LOCATION = 'static'
-STATIC_URL = f'https://precastappbucket.s3.amazonaws.com/static/'
-# STATICFILES_STORAGE = 'precast_app.storage_backends.StaticStorage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# s3 public media settings
-AWS_PUBLIC_MEDIA_LOCATION = 'media/public'
-# DEFAULT_FILE_STORAGE = 'precast_app.storage_backends.PublicMediaStorage'
-DEFAULT_FILE_STORAGE = 'precast_app.storage_backends.MyS3Boto3Storage'
-AWS_S3_REGION_NAME = 'us-east-1'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -89,8 +76,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'precast_app.wsgi.application'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -150,8 +137,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_temp')
 # save .js files into the project folder below... seems they load out of this one.
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'homepage/static'),]
 
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Default primary key field type
