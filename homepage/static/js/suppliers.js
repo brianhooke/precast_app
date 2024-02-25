@@ -5,7 +5,7 @@ function showSuppliers(suppliers) {
         <div class="modal-dialog" role="document" style="max-width: 800px;">
             <div class="modal-content" style="border: 3px solid black;">
                 <div class="modal-header" style="text-align: center; background: linear-gradient(45deg, #A090D0 0%, #B3E1DD 100%);">
-                    <h5 class="modal-title">Suppliers Mmm</h5>
+                    <h5 class="modal-title">Suppliers123</h5>
                     <p></p>
                 </div>
                 <div class="modal-body" style="overflow-x: auto;">
