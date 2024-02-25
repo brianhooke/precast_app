@@ -56,6 +56,7 @@ STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_PUBLIC_MEDIA_LOCATION = 'media/public'
 # DEFAULT_FILE_STORAGE = 'precast_app.storage_backends.PublicMediaStorage'
 DEFAULT_FILE_STORAGE = 'precast_app.storage_backends.MyS3Boto3Storage'
+AWS_S3_REGION_NAME = 'us-east-1'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
